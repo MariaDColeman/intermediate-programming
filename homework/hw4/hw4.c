@@ -29,7 +29,11 @@ int main(int argc, char* argv[]) {
     return 2;
   }
 
-
+  int numOfPatterns;
+  char* extractedPatterns[];
+numOfPatterns  = extractPatterns(stdin, resultInvalidCheck, extractedPatterns);
+  
+  /*
   char arrayFromFile[resultInvalidCheck];
   arrayFromFile = createArrayFromFile(filehandleIN, resultInvalidCheck); //if not invalid, then resultInvalidCheck equals the number of valid "A, T, C, G" characters
 
@@ -52,9 +56,9 @@ int main(int argc, char* argv[]) {
  
  char arrayFromSTDIN[resultInvalidCheckSTDIN];
  arrayFromSTDIN = createArrayFromFile(stdin, resultInvalidCheckSTDIN);
+  */
 
-
-  
+ outputs(extractedPatterns, numOfPatterns)
   
   
   fclose(filehandleIN);

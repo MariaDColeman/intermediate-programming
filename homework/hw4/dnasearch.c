@@ -5,7 +5,8 @@
 //function definitions
 
 //check for invalid text file; return 0 if invalid
-int invalidTextFileCheck(FILE *filehandleIN, int maxLength) {
+//code is to use to test patterns. if code is something then we know its doing the user patterns
+int invalidTextFileCheck(FILE *filehandleIN, int maxLength, int code) {
 
   int counter=0;
   char character;
@@ -24,6 +25,10 @@ int invalidTextFileCheck(FILE *filehandleIN, int maxLength) {
     counter += 1;
     }
   } //end of while loop
+  if (code == 3) { //my code meaning user input patterns case
+    return counter; //this is so no spaces are allowed
+  }
+    
   } //end of outer while loop
   if (counter == 0) {
     return -1; //probably change back to 0
@@ -31,33 +36,96 @@ int invalidTextFileCheck(FILE *filehandleIN, int maxLength) {
   else {
   return counter;
   }
+  
 } //end of invalidTextFileCheck
 
 
 
 
-//extract first pattern from stdin
-char[] extractPattern(FILE *filehandleIN) {
+//extract patterns from stdin
+//counter is max length of 1 pattern (length of text size) maybe from main
+int extractPatterns(FILE *filehandleIN, int counter, char*[] patterns) {
+  /*
   char character;
-  char pattern[];
+  char* patterns[];
   int i = 0;
+  char onePattern[];
   
-  while ((fscanf(filehandleIN, "%c", &character) != 0)&&(!isspace(character))) {
+  while ((fscanf(filehandleIN, "%c", &character) != 0)&&(character!=EOF)
+
+  while ((!isspace(character))) {
     if (invalidCharCheck(character)) {
-      pattern[i] = character;
+      onePattern[i] = character;
       i += 1;
     } //end of if
+    else if (i > counter) {
+      return NULL;
+    }
     else {
-      return;
+      return NULL;
     }
 
-  } //end of while
-  return pattern;
+	 }
+	 }//end of while
+  
+  return patterns;
+  */
 
-} //end of extractPattern
+  //new idea:
+
+  char* patterns[];
+  char somePattern[];
+  int c;
+  c = getc(filehandleIN);
+  while ( c!= EOF) {
+    ungetc(c, filehandleIN);
+    
+  somePattern = onePattern(filehandleIN, counter); // maybe combine in one line
+
+ 
+    
+  if (somePattern == NULL) {
+    //print some error or something
+    return 1;
+  }
+
+  // while (somePattern != NULL) {
+  else {
+  patterns[i] = somePattern;
+    somePattern = onePattern(stdin, counter);
+    i++;
+  }
+
+  return i; //i is the number of patterns
+  
+  }
+
+  
+
+} //end of extractPatterns
 
 
+//extract one pattern
+//filehandleIN should be stdin
+//input counter probably from main (or function that calls this which gets it from main)
+char[] onePattern(FILE *filehandleIN, int counter) {
+  lengthOfPattern = invalidTextFileCheck(filehandleIN, counter, 3); //3 is the code for this user pattern input case: see function definition
+  if (!(lengthOfPattern)) {
+    return 1; //SOME ERRRORRRR CODE maybe null
+  }
 
+  char onePattern[lengthOfPattern];
+  int successNum = 0;
+  
+  for(int i=0; i < lengthOfPattern; i++) {
+    successNum = fscanf(filehandleIN, "%c", onePattern[i])
+      if (!(successNum)) {
+	return 1; //SOME ERROR CODE maybe null
+      }
+  }
+  return onePattern;
+
+}
 
 
 
@@ -102,17 +170,20 @@ char[] createArrayFromFile(FILE *filehandleIN, int counter) {
 
 
 //store text from stdin in an array of strings
+//send in counter as the length of the text in the file!!
+//but we want it to be max of one pattern not num of patterns
 char* [] createArrayFromSTDIN(FILE *filehandleIN, int counter) {
 
   char character;
   char pattern
     char* arrayOfPatterns[];
   int i = 0;
-  arrayOfPatterns[i] = extractPattern(stdin, );
+  while ((fscanf(filehandleIn, "%c", &character)!=0)&&(character != EOF) {
+  arrayOfPatterns[i] = extractPattern(stdin, counter );
   if (arrayOfPatterns[i] == NULL) {
     return;
   }
-    
+    }
   return arrayOfPatterns;
 }
 
@@ -154,3 +225,51 @@ int[] offsets(char arrayFromFile[], int lengthArrayFromFile, char* arrayFromSTDI
 
 
 //maybe first go through and check if each pattern is valid. then find offsets of each pattern so you just send in one pattern above at a time
+
+
+int[] findAllMatches(char pattern[], FILE *filehandleIN) {
+
+  int offsets[];
+
+  offset = 0;
+  findNextMatch(pattern, stdin, offset);
+
+
+  return offsets;
+
+} //end of findAllMatches
+
+
+
+
+
+int findNextMatch(char pattern[], FILE *filehandleIN, int offset) {
+  int newOffset;
+
+  return newOffset;
+  
+  
+} //end of findNextMatch
+
+
+  //somehing calls findAllMatches(extractedPatterns[i], filehandleIN);
+
+
+  int outputs(char* extractedPatterns[], int numOfPatterns) {
+
+    for (int i=0; i<numOfPatterns; i++) {
+    
+    findAllMatches(extractedPatterns[i]);
+    printArray(offsets);
+    }
+
+
+    return 0;
+  }//end of outputs
+
+
+  
+  int printArray(int offsets[], int num) {
+
+
+  }
