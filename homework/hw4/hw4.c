@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 #include "dnasearch.h"
 
 int main(int argc, char* argv[]) {
@@ -20,24 +22,30 @@ int main(int argc, char* argv[]) {
   FILE *filehandleIN;
 
   //open the input file in "read" mode
-  filehandleIN = fopen(inputFileName, "r");
+  filehandleIN = fopen(inFileName, "r");
 
-  resultInvalidCheck = invalidTextFileCheck(filehandleIN, 15000);
+  
+  int resultInvalidCheck = invalidTextFileCheck(filehandleIN, 15000, 0);
   
   if ((resultInvalidCheck == 0) || (resultInvalidCheck == 1)) {
     printf("Invalid text file");
     return 2;
   }
 
-  int numOfPatterns;
-  char* extractedPatterns[];
-numOfPatterns  = extractPatterns(stdin, resultInvalidCheck, extractedPatterns);
-  
-  /*
-  char arrayFromFile[resultInvalidCheck];
-  arrayFromFile = createArrayFromFile(filehandleIN, resultInvalidCheck); //if not invalid, then resultInvalidCheck equals the number of valid "A, T, C, G" characters
+  int numOfPatterns=-2;
+  //char* extractedPatterns[];
+  char** patterns = NULL;
+  // char* extractedPatterns[] = malloc(sizeof(char) * (resultInvalidCheck));
+  //int* lengthOfPatterns = malloc(sizeof(char) * resultInvalidCheck);
+  numOfPatterns  = extractPatterns(stdin, resultInvalidCheck, patterns); //extractedPatterns
+ if (numOfPatterns == -1) {
+   return -1;
+ }
 
-    
+  char arrayFromFile[resultInvalidCheck];
+  createArrayFromFile(filehandleIN, resultInvalidCheck, arrayFromFile); //if not invalid, then resultInvalidCheck equals the number of valid "A, T, C, G" characters
+
+  /*
  resultInvalidCheckSTDIN = invalidTextFileCheck(stdin, resultInvalidCheck);
 
  While ((resultInvalidCheckSTDIN == 0) || (resultInvalidCheckSTDIN == -1)) {
@@ -52,14 +60,15 @@ numOfPatterns  = extractPatterns(stdin, resultInvalidCheck, extractedPatterns);
  }
 
  }
- 
- 
+  */
+ /* 
  char arrayFromSTDIN[resultInvalidCheckSTDIN];
  arrayFromSTDIN = createArrayFromFile(stdin, resultInvalidCheckSTDIN);
   */
 
- outputs(extractedPatterns, numOfPatterns)
-  
+  outputs(patterns, numOfPatterns, arrayFromFile); //extractedPatterns
+
+ 
   
   fclose(filehandleIN);
   return 0;
