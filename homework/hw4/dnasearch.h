@@ -1,5 +1,14 @@
 #include <stdio.h>
 
+/*
+Maria Coleman
+600,120
+3/8/2017
+homework 4
+mcolem31
+mcolem31@jhu.edu
+ */
+
 
 //function declarations
 

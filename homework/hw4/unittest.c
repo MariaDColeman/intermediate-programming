@@ -1,13 +1,15 @@
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "dnasearch.h"
 
 
 int main() {
 
 
-  FILE *filehandleIN;
-  filehandleINinvalid = fopen(invalidTextFile.txt, "r");
-  filehandleINvalid = fopen(validTextFile.txt, "r");
+  //  FILE *filehandleIN;
+ FILE * filehandleINinvalid = fopen("invalidTextFile.txt", "r");
+ FILE * filehandleINvalid = fopen("validTextFile.txt", "r");
   
   int condition = 1;
 
@@ -26,21 +28,28 @@ int main() {
     printf("invalidTextFileCheck function is not working properly because valid input was entered.");
     condition = 0;
   }
+  
 
-  if((extractPatterns(filehandleINvalid, 10, {"ATA" "TGT"})) == -1) {
-    printf("extractPatterns function isn't working properly because the input is valid.");
+  if((invalidCharCheck(y) == 1)) {
+    printf("invalidCharCheck function is not working properly since y is not valid.")
+      condition = 0;
+      }
+
+  if((invalidCharCheck(c) == 1)) {
+    printf("invalidCharCheck function is not working properly because c is valid, just like C is")
+      condition = 0;
   }
 
 
 
 
+  if((createArrayFromFile("validTextFile.txt", 5, [w e r])) != void) {
+    printf("createArrayFromFile isn't working greater since it should be void.")
+      condition = 0;
+  }
 
 
-
-
-
-
-
+  if((outputs(
 
 
 
@@ -48,7 +57,7 @@ int main() {
 
 
   if (condition) {
-    print("All tests passed!");
+    printf("All tests passed!");
   }
 
   

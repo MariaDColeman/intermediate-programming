@@ -4,6 +4,17 @@
 #include <ctype.h>
 #include "dnasearch.h"
 
+/*
+Maria Coleman
+600.120
+3/8/2017
+Homework 4
+mcolem31
+mcolem31@jhu.edu
+ */
+
+
+
 int main(int argc, char* argv[]) {
 
   //Confirm that one and only one command-line argument is present in addition to the executable name and command to run it
@@ -26,18 +37,18 @@ int main(int argc, char* argv[]) {
 
   
   int resultInvalidCheck = invalidTextFileCheck(filehandleIN, 15000, 0);
-  
+  //  printf("%d", resultInvalidCheck);
   if ((resultInvalidCheck == 0) || (resultInvalidCheck == 1)) {
     printf("Invalid text file");
     return 2;
   }
 
   int numOfPatterns=-2;
-  //char* extractedPatterns[];
+  
   char** patterns = NULL;
-  // char* extractedPatterns[] = malloc(sizeof(char) * (resultInvalidCheck));
-  //int* lengthOfPatterns = malloc(sizeof(char) * resultInvalidCheck);
-  numOfPatterns  = extractPatterns(stdin, resultInvalidCheck, patterns); //extractedPatterns
+  
+  
+  numOfPatterns  = extractPatterns(stdin, resultInvalidCheck, patterns); 
  if (numOfPatterns == -1) {
    return -1;
  }
@@ -45,28 +56,8 @@ int main(int argc, char* argv[]) {
   char arrayFromFile[resultInvalidCheck];
   createArrayFromFile(filehandleIN, resultInvalidCheck, arrayFromFile); //if not invalid, then resultInvalidCheck equals the number of valid "A, T, C, G" characters
 
-  /*
- resultInvalidCheckSTDIN = invalidTextFileCheck(stdin, resultInvalidCheck);
-
- While ((resultInvalidCheckSTDIN == 0) || (resultInvalidCheckSTDIN == -1)) {
- 
- if (resultInvalidCheckSTDIN == 0) {
-   printf("Invalid pattern");
-   return 3;
- }
-
- while (resultInvalidCheckSTDIN == -1) {
-   resultInvalidCheckSTDIN = invalidTextFileCheck(stdin, resultInvalidCheck);
- }
-
- }
-  */
- /* 
- char arrayFromSTDIN[resultInvalidCheckSTDIN];
- arrayFromSTDIN = createArrayFromFile(stdin, resultInvalidCheckSTDIN);
-  */
-
-  outputs(patterns, numOfPatterns, arrayFromFile); //extractedPatterns
+  
+  outputs(patterns, numOfPatterns, arrayFromFile); 
 
  
   

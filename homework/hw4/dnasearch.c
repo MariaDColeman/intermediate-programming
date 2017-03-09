@@ -4,6 +4,25 @@
 #include <ctype.h>
 #include <string.h>
 
+
+
+/*
+Maria Coleman
+600,120
+3/8/2017
+Homework 4
+mcolem31
+mcolem31@jhu.edu
+ */
+
+
+
+
+
+
+
+
+
 //function definitions
 
 //check for invalid text file; return 0 if invalid
@@ -11,10 +30,17 @@
 int invalidTextFileCheck(FILE *filehandleIN, int maxLength, int code) {
 
   int counter=0;
-  char character;
-  //for somethin till eof
-  //for (int i = 0; i < 15002; i++)
-  while ((fscanf(filehandleIN, " %c ", &character) != 0)&&(character != EOF)) {
+ 
+  
+  
+ 
+  int character;
+ 
+  while((character = fgetc(filehandleIN)) != EOF) {
+ 
+ 
+ 
+ 
     if(!isspace(character)) {
     //if invalid character
     if (invalidCharCheck(character) == 0) {
@@ -26,15 +52,16 @@ int invalidTextFileCheck(FILE *filehandleIN, int maxLength, int code) {
     else {
     counter += 1;
     }
-  }
-  } //end of while loop
+    }
+ 
+    } //end of while loop
 
   if (code == 3) { //my code meaning user input patterns case
     return counter; //this is so no spaces are allowed
   }
     
   if (counter == 0) {
-    return -1; //probably change back to 0
+    return -1; 
   }
   else {
   return counter;
@@ -46,50 +73,21 @@ int invalidTextFileCheck(FILE *filehandleIN, int maxLength, int code) {
 
 
 
-//counter is max length of 1 pattern (length of text size) maybe from main
-int extractPatterns(FILE *filehandleIN, int counter, char** patterns) { //char* patterns[]
-  /*
-  char character;
-  char* patterns[];
-  int i = 0;
-  char onePattern[];
-  
-  while ((fscanf(filehandleIN, "%c", &character) != 0)&&(character!=EOF)
 
-  while ((!isspace(character))) {
-    if (invalidCharCheck(character)) {
-      onePattern[i] = character;
-      i += 1;
-    } //end of if
-    else if (i > counter) {
-      return NULL;
-    }
-    else {
-      return NULL;
-    }
+int extractPatterns(FILE *filehandleIN, int counter, char** patterns) { 
 
-	 }
-	 }//end of while
-  
-  return patterns;
-  */
-
-  //new idea:
-
-  // char* patterns[] = patterns;
-  char* somePattern=NULL; //char somePattern[]
+  char* somePattern=NULL;
   int lengthOfPattern;
 
   int c;
-  c = getc(filehandleIN);
+  c = fgetc(filehandleIN);
   int i = 0;
-  //int d;
+  
     while (c != EOF) {
     ungetc(c, filehandleIN);
     lengthOfPattern = -1;
-    lengthOfPattern = onePattern(filehandleIN, counter, somePattern); // maybe combine in one line
-    //lengthOfPatterns[i] = lengthOfPattern;
- 
+    lengthOfPattern = onePattern(filehandleIN, counter, somePattern); 
+   
     
   if (lengthOfPattern == -1) {
     //print some error or something
@@ -100,7 +98,7 @@ int extractPatterns(FILE *filehandleIN, int counter, char** patterns) { //char* 
     printf("Something wrong with putting pattern together");
   }
 
-  // while (somePattern != NULL) {
+  
   else {
   patterns[i] = somePattern;
    onePattern(stdin, counter, somePattern);
@@ -122,17 +120,17 @@ int onePattern(FILE *filehandleIN, int counter, char onePatternArray[]) {
 
   int lengthOfPattern = invalidTextFileCheck(filehandleIN, counter, 3); //3 is the code for this user pattern input case look at function definition
   if (!(lengthOfPattern)) {
-    printf("Invalid text file");
-    return -1; //SOME ERRRORRRR CODE maybe null
+    printf("Invalid pattern");
+    return -1; 
   }
 
-  //char onePattern[lengthOfPattern];
+  
   int successNum = 0;
   
   for(int i=0; i < lengthOfPattern; i++) {
     successNum = fscanf(filehandleIN, "%c", &onePatternArray[i]);
       if (!(successNum)) {
-	return 0; //SOME ERROR CODE maybe null
+	return 0; 
       }
   }
   onePatternArray[lengthOfPattern]='\0';
@@ -149,7 +147,7 @@ int onePattern(FILE *filehandleIN, int counter, char onePatternArray[]) {
 //check for invalid character; return 0 if invalid
 int invalidCharCheck(char c) {
  c = toupper(c);
-  if ((c != 'A') || (c != 'C') || (c != 'G') || (c != 'T')) {
+  if ((c != 'A') && (c != 'C') && (c != 'G') && (c != 'T')) {
     return 0;
   } //end of if
 
@@ -162,45 +160,19 @@ int invalidCharCheck(char c) {
 //store text from file in an array of characters
 void createArrayFromFile(FILE *filehandleIN, int counter, char array[]) {
 
-  char character;
-  //char array[counter];
+  int character;
+  
 
  for (int i = 0; i < counter; i++) {
-  while ((fscanf(filehandleIN, "%c", &character) != 0)&&(!isspace(character))) {
-
-    //while(!isspace(character)) {
+  
+    while(((character=fgetc(filehandleIN)) != EOF)&&(!isspace(character))) {
+  
       array[i] = character;
-      //} //end of inner while loop
-  } //end of while loop
- } //end of for loop
- array[counter] = '\0';
- 
-} //end of createArrayFromFile
-
-//or fscanf(filehandleIN, "[ 
-
-
-/*
-
-//store text from stdin in an array of strings
-//send in counter as the length of the text in the file!!
-//but we want it to be max of one pattern not num of patterns
-char* [] createArrayFromSTDIN(FILE *filehandleIN, int counter) {
-
-  char character;
-  char pattern
-    char* arrayOfPatterns[];
-  int i = 0;
-  while ((fscanf(filehandleIn, "%c", &character)!=0)&&(character != EOF) {
-  arrayOfPatterns[i] = extractPattern(stdin, counter );
-  if (arrayOfPatterns[i] == NULL) {
-    return;
+  
   }
-    }
-  return arrayOfPatterns;
-}
-
-*/
+ } array[counter] = '\0';
+ 
+} 
 
 
 
@@ -208,79 +180,19 @@ char* [] createArrayFromSTDIN(FILE *filehandleIN, int counter) {
 
 
 
-/*
-
-//output list of offsets where the pattern occurs in the text from the file
-int* offsets(char arrayFromFile[], int lengthArrayFromFile, char pattern[], int lengthOfPattern) {
-  int *offsetsArray;
-  int offsets = 0;
-  int match = 1;
-  int k = 0;
-  for (int i=0; i < (lengthArrayFromFile - lengthOfPattern); i++) {
-  
-    match = 1;
-    for (int j = 0; j <= lengthOfPattern; j++) {
-    
-      if ((pattern[j]) != arrayFromFile[i+j]) {
-	match = 0;
-	goto start;//break; //HAVE TO BREAK OUT OF BOTH??
-      }
-      if (match) {
-	*offsetsArray = i;
-	offsetsArray++;
-	//k++;
-      }
-    } //end of inner for loop
-  start:
-    
-
-  } //end of outer for loop
-  
-  return offsetsArray;
-} //end of offsets
-*/
-
-//maybe first go through and check if each pattern is valid. then find offsets of each pattern so you just send in one pattern above at a time
-/*
-
-int* findAllMatches(char pattern[], char arrayFromFile[], int resultInvalidCheck) {
-
-  int *offsets;
-
-  offset = 0;
-  findNextMatch(pattern, arrayFromFile, *offsets, resultInvalidCheck);
 
 
-  return offsets;
-
-} //end of findAllMatches
-
-*/
 
 
-/*
-int findNextMatch(char pattern[], char arrayFromFile[], int offset, int lengthArrayFromFile) {
-  int newOffset = offset;
-
-  offsets(arrayFromFile, lengthArrayFromFile, pattern[i], lengthOfPattern)
-  return newOffset;
-  
-  
-} //end of findNextMatch
-
-
-  //somehing calls findAllMatches(extractedPatterns[i], filehandleIN);
-  */
 
 int outputs(char* extractedPatterns[], int numOfPatterns, char arrayFromFile[]) { //char* extractedPatterns
   //int x=0;
   //int index[]; ?????????????
     for (int i=0; i<numOfPatterns; i++) {
     
-      //  findAllMatches(extractedPatterns[i], arrayFromFile, resultInvalidCheck);
-      // printArray(offsets);
+     
 
-      //  offsets(arrayFromFile, resultInvalidCheck,extractedPatterns[i], lengthOfPatterns[i]); 
+      
       int lengthText = strlen(arrayFromFile);
       int lengthPattern = strlen(extractedPatterns[i]);
       printf("%s ", extractedPatterns[i]);
@@ -295,10 +207,6 @@ int outputs(char* extractedPatterns[], int numOfPatterns, char arrayFromFile[]) 
 
 
   
-// int printArray(int offsets[], int num) {
-
-
-//}
 
 
 
@@ -316,7 +224,7 @@ void indexOfPatternInText(char arrayFromFile[], char pattern[], int lengthText, 
     }
     }
     if (condition == 1) {
-      //return k;
+     
       printf("%d ", k);
     }
     i=k;
