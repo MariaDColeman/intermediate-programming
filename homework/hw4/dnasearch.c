@@ -14,8 +14,8 @@ int invalidTextFileCheck(FILE *filehandleIN, int maxLength, int code) {
   char character;
   //for somethin till eof
   //for (int i = 0; i < 15002; i++)
-  while ((fscanf(filehandleIN, "%c", &character) != 0)&&(character != EOF)) {
-  while(!isspace(character)) {
+  while ((fscanf(filehandleIN, " %c ", &character) != 0)&&(character != EOF)) {
+    if(!isspace(character)) {
     //if invalid character
     if (invalidCharCheck(character) == 0) {
        return 0;
@@ -26,12 +26,13 @@ int invalidTextFileCheck(FILE *filehandleIN, int maxLength, int code) {
     else {
     counter += 1;
     }
+  }
   } //end of while loop
+
   if (code == 3) { //my code meaning user input patterns case
     return counter; //this is so no spaces are allowed
   }
     
-  } //end of outer while loop
   if (counter == 0) {
     return -1; //probably change back to 0
   }

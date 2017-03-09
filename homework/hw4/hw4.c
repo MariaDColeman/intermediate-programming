@@ -7,7 +7,7 @@
 int main(int argc, char* argv[]) {
 
   //Confirm that one and only one command-line argument is present in addition to the executable name and command to run it
-  if (argc != 1) {
+  if (argc != 2) {
     printf("Usage: hw4 textFileName.txt\n");
     return 1;
   }
