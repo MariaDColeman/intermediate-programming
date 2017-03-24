@@ -13,8 +13,42 @@ date due
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "prompts.c"
 
+int numLines(FILE *filehandleIN);
+struct individualCourse* getValidInput(struct individualCourse *catalog, int len);
+
+/*
+//define a struct to represent an individual course
+struct individualCourse{
+	char courseDiv[3];
+	int courseDep;
+	int courseNum;
+	float credits;
+	char courseTitle[33];
+};
+*/
+
+//define a struct to represent an individual course
+struct individualCourse {
+	char courseDiv[3];
+	char courseDep[4];
+	char courseNum[4];
+	float credits;
+	char courseTitle[33];
+};
+
+
+struct transcriptCourse {
+	struct transcriptCourse *next;
+	struct individualCourse course;
+	char year[5];
+	char semester;
+	char grade[3];
+};
+
+//IDEA: STRCMP TO STRING IN CATALOG ARRAY
 
 int main(int argc, char* argv[]) {
 
@@ -35,12 +69,51 @@ FILE *filehandleIN;
 
 //open the input file in "read" mode
 filehandleIN = fopen(inputFileName, "r");
+if (!filehandleIN) {
+	printf("Error: Unable to open input catalog file\n");
+	return 1;
+}
+
+
+int len = numLines(filehandleIN);
+
+//struct individualCourse catalog[length];
+
+struct individualCourse * catalog;
+catalog = malloc(sizeof(struct individualCourse) * len);
+
+for(int i=0; i<len; i++) {
+  char tempStr[3] = {getc(filehandleIN), getc(filehandleIN), '\0'};
+  //catalog[i].courseDiv = {getc(filehandleIN), getc(filehandleIN), '\0'};
+  strcpy((catalog[i].courseDiv), tempStr);
+  getc(filehandleIN); //read the period character
+  char tempStr2[4] = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
+  //catalog[i].courseDep = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
+  strcpy((catalog[i].courseDep), tempStr2);
+  getc(filehandleIN); //read the period character
+  char tempStr3[4] = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
+  //catalog[i].courseNum = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
+  strcpy((catalog[i].courseNum), tempStr3);
+  fscanf(filehandleIN, "%f ", &(catalog[i].credits));
+	fgets(catalog[i].courseTitle, 33, filehandleIN); //hoping this will start where it is in line and go to end of line
+	getc(filehandleIN); //hoping this will read the newline character
+}
+
+//REMEMBER TO FREE CATALOG
+
+
+
+
+
+
+
 
 
 
 int menuInput;
 char nextChar;
-
+ struct individualCourse * newIndividualCourse;
+ 
 do {
 	menu_prompt();
 	scanf("%d%c", &menuInput, &nextChar);
@@ -62,28 +135,86 @@ case 113:
 
 //display the catalog:
 case 1:
+	for (int i = 0; i < len; i++) {
+	printf("%s.%s.%s %.1f %s\n", catalog[i].courseDiv, catalog[i].courseDep, catalog[i].courseNum, catalog[i].credits, catalog[i].courseTitle);
+	}	
   break;
+
 //display information on a specific course in the catalog:
 case 2:
+  /*
+  do {
+	course_prompt();
+	int valid = 1;
+	int present = 0;
+	char newCourseDiv = {getc(stdin), getc(stdin), getc(stdin), '\0'};
+	if ((getc(stdin)) != '.') {
+		invalid_input_msg();
+		valid = 0;
+	}
+	else {
+		char newCourseDep = {getc(stdin), getc(stdin), getc(stdin), '\0'}
+		if ((getc(stdin)) != '.') {
+		invalid_input_msg();
+		valid = 0;
+		}
+		else {
+			char newCourseNum = {getc(stdin), getc(stdin), getc(stdin), '\0'}
+			if ((getc(stdin)) != '\n') {
+			invalid_input_msg();
+			valid = 0;
+			}
+		}
+	}
+
+if (valid) {
+//check if the course exists in the catalog
+
+for (int i = 0; i<len; i++) {
+	if ((strcmp((catalog[i].courseDiv),newCourseDiv) == 0) && (strcmp((catalog[i].courseDep),newCourseDep) == 0) && (strcmp((catalog[i].courseNum),newCourseNum) == 0)) {
+		present = 1;
+		newCredits = catalog[i].credits;
+		newCourseTitle = catalog[i].courseTitle;
+	}
+
+}
+if (!present) {
+	course_absent_msg();
+}
+}
+} while ((!valid) && (!present);
+  */
+  //struct individualCourse * newIndividualCourse; //= malloc(sizeof(struct individualCourse));
+    newIndividualCourse = getValidInput(catalog, len);
+ printf("%s.%s.%s %.1f %s\n", newIndividualCourse->courseDiv, newIndividualCourse->courseDep, newIndividualCourse->courseNum, newIndividualCourse->credits, newIndividualCourse->courseTitle);
   break;
+
 //update the title of a specific course:
 case 3:
+	course_prompt();
+
   break;
+
 //update the credit assignment of a specific course:
 case 4:
   break;
+
 //add a course to the student transcript:
 case 5:
   break;
+
 //remove a course from the student transcript:
 case 6:
   break;
+
 //display the current transcript:
 case 7:
   break;
+
 //display information about a specific course in the transcript:
 case 8:
   break;
+
 //compute the cumulative GPA for the student:
 case 9:
   break;
@@ -96,6 +227,99 @@ default:
 } while ((menuInput != 81) && (menuInput != 113)); //the menuInput variable is equal to 81 for Q and 113 for q when the user wants to quit
 
 	
+fclose(filehandleIN);
+filehandleIN = NULL;
 
-
+return 0;
 } //end of main
+
+
+//function to figure out number of lines in input file
+int numLines(FILE *filehandleIN) {
+char c;
+ int len;
+ for (c = getc(filehandleIN); c != EOF; c = getc(filehandleIN)){
+	if (c=='\n') {
+		len = len + 1;
+	}
+}
+rewind(filehandleIN);
+return len;
+} //end numLines
+
+
+
+//function to take care of steps b-d in homework prompts
+//return a struct or a pointer to a struct of an individual course
+struct individualCourse* getValidInput(struct individualCourse *catalog, int len) {
+	struct individualCourse *inputCoursePtr;
+	inputCoursePtr = malloc(sizeof(struct individualCourse));
+
+	char newCourseDiv[3];
+	char newCourseDep[4];
+	char newCourseNum[4];
+	float newCredits;
+	char newCourseTitle[33];
+	int valid = 1;
+	int present = 0;
+	
+	do {
+	course_prompt();
+	//int valid = 1;
+	//int present = 0;
+	char newCourseDivTemp[3] = {(getc(stdin)), (getc(stdin)), '\0'};
+	strcpy(newCourseDiv, newCourseDivTemp);
+	if ((getc(stdin)) != '.') {
+		invalid_input_msg();
+		valid = 0;
+	}
+	else {
+	 char newCourseDepTemp[4] = {getc(stdin), getc(stdin), getc(stdin), '\0'};
+	 strcpy(newCourseDep, newCourseDepTemp);
+	 if ((getc(stdin)) != '.') {
+		invalid_input_msg();
+		valid = 0;
+		}
+		else {
+		  char newCourseNumTemp[4] = {getc(stdin), getc(stdin), getc(stdin), '\0'};
+		  strcpy(newCourseNum, newCourseNumTemp);
+			  if ((getc(stdin)) != '\n') {
+			    invalid_input_msg();
+			    valid = 0;
+			}
+		}
+	}
+
+if (valid) {
+//check if the course exists in the catalog
+
+for (int i = 0; i<len; i++) {
+	if ((strcmp((catalog[i].courseDiv),newCourseDiv) == 0) && (strcmp((catalog[i].courseDep),newCourseDep) == 0) && (strcmp((catalog[i].courseNum),newCourseNum) == 0)) {
+		present = 1;
+		newCredits = catalog[i].credits;
+		//newCourseTitle = catalog[i].courseTitle;
+		strcpy(newCourseTitle, (catalog[i].courseTitle));
+	}
+
+}
+if (!present) {
+	course_absent_msg();
+}
+}
+} while ((!valid) && (!present));
+
+	/*
+//put into struct
+inputCoursePtr->courseDiv = newCourseDiv;
+inputCoursePtr->courseDep = newCourseDep;
+inputCoursePtr->courseNum = newCourseNum;
+inputCoursePtr->credits = newCredits;
+inputCoursePtr->courseTitle = newCourseTitle;
+	*/
+	strcpy((inputCoursePtr->courseDiv), newCourseDiv);
+	strcpy((inputCoursePtr->courseDep), newCourseDep);
+	strcpy((inputCoursePtr->courseNum), newCourseNum);
+	inputCoursePtr->credits = newCredits;
+	strcpy((inputCoursePtr->courseTitle), newCourseTitle);
+return inputCoursePtr;
+}
