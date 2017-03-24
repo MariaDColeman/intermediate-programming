@@ -11,6 +11,14 @@ date due
 
 */
 
+
+
+
+
+//ASK IF WE SHOULD CONVERT INPUT FOR COURSE DEP TO UPPER CASE FIRST THEN COMPARE
+
+
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -177,10 +185,36 @@ case '3':
 
 //update the credit assignment of a specific course:
 case '4':
+	//steps b-d in separate function
+	newIndividualCourse = getValidInput(catalog, len);
+
+new_credit_prompt();
+//CHECK PIAZZA TO SEE IF SOMETHING LIKE 16.52 IS OKAYYY AND CHECK IF IT NEEDS .0
+	float inputCredits;
+	fscanf(stdin, "%f ", inputCredits);
+//CAN DO atof if you get it in as a string and check its one digit.one digit
+//HAVE TO CHECK THE INVALID PARTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+
+//update corresponding course's entry in the catalog with new title
+	for (int i = 0; i<len; i++) {
+		if ((strcmp((catalog[i].courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((catalog[i].courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((catalog[i].courseNum),newIndividualCourse->courseNum) == 0)) {
+		  
+		  catalog[i].credits = inputCredits;
+		}
+	}
+
+
+	course_updated_msg();
   break;
+
 
 //add a course to the student transcript:
 case '5':
+	//steps b-d in separate function
+	newIndividualCourse = getValidInput(catalog, len);
+
+	semester_prompt();
+
   break;
 
 //remove a course from the student transcript:
