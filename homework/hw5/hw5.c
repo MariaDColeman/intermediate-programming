@@ -96,7 +96,7 @@ for(int i=0; i<len; i++) {
   strcpy((catalog[i].courseNum), tempStr3);
   fscanf(filehandleIN, "%f ", &(catalog[i].credits));
 	fgets(catalog[i].courseTitle, 33, filehandleIN); //hoping this will start where it is in line and go to end of line
-	getc(filehandleIN); //hoping this will read the newline character
+	//getc(filehandleIN); //hoping this will read the newline character
 }
 
 //REMEMBER TO FREE CATALOG
@@ -110,113 +110,93 @@ for(int i=0; i<len; i++) {
 
 
 
-int menuInput;
+char menuInput;
 char nextChar;
  struct individualCourse * newIndividualCourse;
  
 do {
 	menu_prompt();
-	scanf("%d%c", &menuInput, &nextChar);
+	scanf("%c%c", &menuInput, &nextChar);
 
 	while(nextChar != '\n') {
 		while(getchar() != '\n');
 		menu_prompt();
-		scanf("%d%c", &menuInput, &nextChar);
+		scanf("%c%c", &menuInput, &nextChar);
 	}
 
 switch(menuInput) {
 
 //if user enters the key for quit
 //as an integer Q is 81 and q is 113
-case 81:
-case 113:
+case 'q':
+case 'Q':
 	//maybe free things, maybe put it after switch
 	break;
 
 //display the catalog:
-case 1:
+case '1':
 	for (int i = 0; i < len; i++) {
 	printf("%s.%s.%s %.1f %s\n", catalog[i].courseDiv, catalog[i].courseDep, catalog[i].courseNum, catalog[i].credits, catalog[i].courseTitle);
 	}	
   break;
 
 //display information on a specific course in the catalog:
-case 2:
-  /*
-  do {
-	course_prompt();
-	int valid = 1;
-	int present = 0;
-	char newCourseDiv = {getc(stdin), getc(stdin), getc(stdin), '\0'};
-	if ((getc(stdin)) != '.') {
-		invalid_input_msg();
-		valid = 0;
-	}
-	else {
-		char newCourseDep = {getc(stdin), getc(stdin), getc(stdin), '\0'}
-		if ((getc(stdin)) != '.') {
-		invalid_input_msg();
-		valid = 0;
-		}
-		else {
-			char newCourseNum = {getc(stdin), getc(stdin), getc(stdin), '\0'}
-			if ((getc(stdin)) != '\n') {
-			invalid_input_msg();
-			valid = 0;
-			}
-		}
-	}
-
-if (valid) {
-//check if the course exists in the catalog
-
-for (int i = 0; i<len; i++) {
-	if ((strcmp((catalog[i].courseDiv),newCourseDiv) == 0) && (strcmp((catalog[i].courseDep),newCourseDep) == 0) && (strcmp((catalog[i].courseNum),newCourseNum) == 0)) {
-		present = 1;
-		newCredits = catalog[i].credits;
-		newCourseTitle = catalog[i].courseTitle;
-	}
-
-}
-if (!present) {
-	course_absent_msg();
-}
-}
-} while ((!valid) && (!present);
-  */
-  //struct individualCourse * newIndividualCourse; //= malloc(sizeof(struct individualCourse));
+case '2':
     newIndividualCourse = getValidInput(catalog, len);
  printf("%s.%s.%s %.1f %s\n", newIndividualCourse->courseDiv, newIndividualCourse->courseDep, newIndividualCourse->courseNum, newIndividualCourse->credits, newIndividualCourse->courseTitle);
   break;
 
 //update the title of a specific course:
-case 3:
-	course_prompt();
+case '3':
+	//steps b-d in separate function
+	newIndividualCourse = getValidInput(catalog, len);
+	new_title_prompt();
+	char inputStr[34];
+	fgets(inputStr, 34, stdin);
+	int numOfCharacters = strlen(inputStr);
+	while (numOfCharacters >= 33) {
+		invalid_input_msg();
+		new_title_prompt();
+		fgets(inputStr, 34, stdin);
+		numOfCharacters = strlen(inputStr);
+	}
+	char inputStr2[33];
+	strncpy(inputStr2,inputStr,33);
+//update corresponding course's entry in the catalog with new title
+	for (int i = 0; i<len; i++) {
+		if ((strcmp((catalog[i].courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((catalog[i].courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((catalog[i].courseNum),newIndividualCourse->courseNum) == 0)) {
+		  //catalog[i].courseTitle = inputStr2;
+		  strcpy(catalog[i].courseTitle, inputStr2);
+		}
+	}
+
+
+	course_updated_msg();
 
   break;
 
 //update the credit assignment of a specific course:
-case 4:
+case '4':
   break;
 
 //add a course to the student transcript:
-case 5:
+case '5':
   break;
 
 //remove a course from the student transcript:
-case 6:
+case '6':
   break;
 
 //display the current transcript:
-case 7:
+case '7':
   break;
 
 //display information about a specific course in the transcript:
-case 8:
+case '8':
   break;
 
 //compute the cumulative GPA for the student:
-case 9:
+case '9':
   break;
 
 default:
@@ -224,7 +204,7 @@ default:
 
 } //end of switch statement
 
-} while ((menuInput != 81) && (menuInput != 113)); //the menuInput variable is equal to 81 for Q and 113 for q when the user wants to quit
+} while ((menuInput != 'q') && (menuInput != 'Q')); //the menuInput variable is equal to Q or q when the user wants to quit
 
 	
 fclose(filehandleIN);
@@ -237,7 +217,7 @@ return 0;
 //function to figure out number of lines in input file
 int numLines(FILE *filehandleIN) {
 char c;
- int len;
+ int len = 0;
  for (c = getc(filehandleIN); c != EOF; c = getc(filehandleIN)){
 	if (c=='\n') {
 		len = len + 1;
@@ -265,13 +245,15 @@ struct individualCourse* getValidInput(struct individualCourse *catalog, int len
 	
 	do {
 	course_prompt();
-	//int valid = 1;
-	//int present = 0;
+	valid = 1;
+	present = 0;
 	char newCourseDivTemp[3] = {(getc(stdin)), (getc(stdin)), '\0'};
 	strcpy(newCourseDiv, newCourseDivTemp);
 	if ((getc(stdin)) != '.') {
 		invalid_input_msg();
 		valid = 0;
+
+		for (char c = getc(stdin); c != '\n'; c = getc(stdin));
 	}
 	else {
 	 char newCourseDepTemp[4] = {getc(stdin), getc(stdin), getc(stdin), '\0'};
@@ -279,6 +261,7 @@ struct individualCourse* getValidInput(struct individualCourse *catalog, int len
 	 if ((getc(stdin)) != '.') {
 		invalid_input_msg();
 		valid = 0;
+		for (char c = getc(stdin); c != '\n'; c = getc(stdin));
 		}
 		else {
 		  char newCourseNumTemp[4] = {getc(stdin), getc(stdin), getc(stdin), '\0'};
@@ -286,6 +269,7 @@ struct individualCourse* getValidInput(struct individualCourse *catalog, int len
 			  if ((getc(stdin)) != '\n') {
 			    invalid_input_msg();
 			    valid = 0;
+			    for (char c = getc(stdin); c != '\n'; c = getc(stdin));
 			}
 		}
 	}
@@ -306,7 +290,7 @@ if (!present) {
 	course_absent_msg();
 }
 }
-} while ((!valid) && (!present));
+	} while ((!valid) || (!present));
 
 	/*
 //put into struct
