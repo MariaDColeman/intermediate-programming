@@ -18,15 +18,18 @@ date due
 //ASK IF WE SHOULD CONVERT INPUT FOR COURSE DEP TO UPPER CASE FIRST THEN COMPARE
 
 
+//HAVE TO MAKE A SEPARATE .c file FOR SOME REASON
+
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "prompts.c"
 
 int numLines(FILE *filehandleIN);
 struct individualCourse* getValidInput(struct individualCourse *catalog, int len);
-
+void clear(void);
 /*
 //define a struct to represent an individual course
 struct individualCourse{
@@ -51,8 +54,7 @@ struct individualCourse {
 struct transcriptCourse {
 	struct transcriptCourse *next;
 	struct individualCourse course;
-	char year[5];
-	char semester;
+	char semester[7];
 	char grade[3];
 };
 
@@ -112,7 +114,7 @@ for(int i=0; i<len; i++) {
 
 
 
-
+struct transcriptCourse * studentTranscript;
 
 
 
@@ -191,9 +193,28 @@ case '4':
 new_credit_prompt();
 //CHECK PIAZZA TO SEE IF SOMETHING LIKE 16.52 IS OKAYYY AND CHECK IF IT NEEDS .0
 	float inputCredits;
-	fscanf(stdin, "%f ", inputCredits);
+	fscanf(stdin, " %f", &inputCredits);
 //CAN DO atof if you get it in as a string and check its one digit.one digit
 //HAVE TO CHECK THE INVALID PARTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+
+//if ANY float is valid, then do this..nope not done have to think it though
+	//if its 3 digits do like "%c%c%c%c for a newline"
+	/*
+	scanf(" %f", &menuInput);
+
+	while(nextChar != '\n') {
+		while(getchar() != '\n');
+		menu_prompt();
+		scanf("%c%c", &menuInput, &nextChar);
+	}
+
+	this might be good enough if any float is valid!!!!!!!
+
+	while ((scanf(" %f", &inputCredits)) == 0) {
+		invalid_input_msg();
+		new_credit_prompt;
+	}
+	*/
 
 //update corresponding course's entry in the catalog with new title
 	for (int i = 0; i<len; i++) {
@@ -213,8 +234,132 @@ case '5':
 	//steps b-d in separate function
 	newIndividualCourse = getValidInput(catalog, len);
 
-	semester_prompt();
+int valid = 0;
+while (valid == 0) {
+	valid = 1;
 
+	semester_prompt();
+	char stringTemp[7] = {'0', '0', '0', '0', '0', '0', '\0'};
+	/*
+	if (fscanf(stdin, " %s", stringTemp) == 0) {
+
+	}
+	*/
+	int cond = 1;
+	char c;
+	for (int i=0; (cond && (i<7)) == 1; i++) {
+		c = getc(stdin);
+		if (c == '\n') {
+			valid = 0;
+			cond = 0;
+		}
+		else {
+			stringTemp[i] = c;
+		}
+	}
+
+	
+	
+	if (valid != 0) {
+	
+	if (getc(stdin) != '\n') {
+		valid = 0;
+		clear();
+	}
+
+	char semesterTemp[7];
+	strcpy(semesterTemp, stringTemp);
+	
+	
+	for (int i=0; i<4;i++) {
+		if (isdigit(semesterTemp[i])==0) {
+			valid = 0;
+		}
+	}
+
+	if (semesterTemp[4] != '.') {
+		valid = 0;
+	}
+
+	semesterTemp[5] = toupper(semesterTemp[5]);
+	if (semesterTemp[5] != 'F' && semesterTemp[5] != 'S') {
+		valid = 0;
+	}
+
+}
+	
+} //end of loop to get proper semester format
+
+valid = 0;
+while(valid == 0) {
+	valid = 1;
+	grade_prompt();
+	char tempString[3] = {'0','0','\0'};
+	int cond = 1;
+	char c;
+	for (int i=0; (cond && (i<7)) == 1; i++) {
+		c=getc(stdin);
+		if (c == '\n') {
+			valid = 0;
+			cond = 0;
+		}
+		else {
+			tempString[i] = c;
+		}
+	}
+if (valid != 0) {
+
+	if (getc(stdin) != '\n') {
+		valid = 0;
+		clear();
+	}
+	char gradeTemp[3];
+	strcpy(gradeTemp, tempString);
+
+	gradeTemp[0] = toupper(gradeTemp[0]);
+	int validInv = 0;
+	switch(gradeTemp[0]) {
+		case 'A':
+		case 'B':
+		case 'C':
+		case 'D':
+		case 'F':
+		case 'I':
+		case 'S':
+		case 'U':
+			validInv = 1;
+			break;
+		default:
+			validInv = 0;
+			break;
+	}
+	valid = valid*validInv;
+	int validInv2 = 0;
+	switch(gradeTemp[1]) {
+		case '+':
+		case '-':
+		case '/':
+			validInv2 = 1;
+			break;
+		default:
+			validInv = 0;
+			break;
+	}
+	valid = valid*validInv2;
+}
+
+} // end of loop to get proper grade format
+
+
+
+//studentTranscript = 
+
+
+
+
+
+
+// look up memcpy
   break;
 
 //remove a course from the student transcript:
@@ -281,29 +426,80 @@ struct individualCourse* getValidInput(struct individualCourse *catalog, int len
 	course_prompt();
 	valid = 1;
 	present = 0;
-	char newCourseDivTemp[3] = {(getc(stdin)), (getc(stdin)), '\0'};
+	char newCourseDivTemp[3] = {'0', '0', '\0'};
+
+	int cond=1;
+	char c;
+	for(int i=0; (cond && (i<3))==1; i++) {
+		c = getc(stdin);
+		if (c == '\n') {
+			valid = 0;
+			cond = 0;
+		}
+		else {
+			newCourseDivTemp[i] = c;
+		}
+	}
+
+	for (int i=0; i<2; i++) {
+		newCourseDivTemp[i] = toupper(newCourseDivTemp[i]); 
+	}
+
 	strcpy(newCourseDiv, newCourseDivTemp);
+
 	if ((getc(stdin)) != '.') {
 		invalid_input_msg();
 		valid = 0;
 
-		for (char c = getc(stdin); c != '\n'; c = getc(stdin));
+		//for (char c = getc(stdin); c != '\n'; c = getc(stdin));
+		clear();
 	}
 	else {
-	 char newCourseDepTemp[4] = {getc(stdin), getc(stdin), getc(stdin), '\0'};
+	 char newCourseDepTemp[4] = {'0', '0', '0', '\0'};
+
+	int cond=1;
+	char c;
+	for(int i=0; (cond && (i<4))==1; i++) {
+		c = getc(stdin);
+		if (c == '\n') {
+			valid = 0;
+			cond = 0;
+		}
+		else {
+			newCourseDepTemp[i] = c;
+		}
+	}
+
+
 	 strcpy(newCourseDep, newCourseDepTemp);
+
 	 if ((getc(stdin)) != '.') {
 		invalid_input_msg();
 		valid = 0;
-		for (char c = getc(stdin); c != '\n'; c = getc(stdin));
+		//for (char c = getc(stdin); c != '\n'; c = getc(stdin));
+		clear();
 		}
 		else {
-		  char newCourseNumTemp[4] = {getc(stdin), getc(stdin), getc(stdin), '\0'};
+		  char newCourseNumTemp[4] = {'0', '0', '0', '\0'};
+	int cond=1;
+	char c;
+	for(int i=0; (cond && (i<4))==1; i++) {
+		c = getc(stdin);
+		if (c == '\n') {
+			valid = 0;
+			cond = 0;
+		}
+		else {
+			newCourseNumTemp[i] = c;
+		}
+	}
+
 		  strcpy(newCourseNum, newCourseNumTemp);
 			  if ((getc(stdin)) != '\n') {
 			    invalid_input_msg();
 			    valid = 0;
-			    for (char c = getc(stdin); c != '\n'; c = getc(stdin));
+			    //for (char c = getc(stdin); c != '\n'; c = getc(stdin));
+				clear();
 			}
 		}
 	}
@@ -340,4 +536,10 @@ inputCoursePtr->courseTitle = newCourseTitle;
 	inputCoursePtr->credits = newCredits;
 	strcpy((inputCoursePtr->courseTitle), newCourseTitle);
 return inputCoursePtr;
+}
+
+
+//function to clear the stdin buffer past the newline char from previous input
+void clear(void) {
+	while(getchar() != '\n');
 }
