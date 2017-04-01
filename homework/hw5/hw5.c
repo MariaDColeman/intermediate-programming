@@ -25,11 +25,23 @@ date due
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <assert.h>
 #include "prompts.c"
 
 int numLines(FILE *filehandleIN);
 struct individualCourse* getValidInput(struct individualCourse *catalog, int len);
 void clear(void);
+transcriptCourse* Create(struct individualCourse *course, char semester[], char grade[]);
+//void InsertAfter(transcriptCourse *e, struct individualCourse *course, char semester[], char grade[]);
+//void InsertHead(transcriptCourse ** head, struct individualCourse *course, char semester[], char grade[]);
+//void DeleteAfter(transcriptCourse *e);
+//void DeleteHead(transcriptCourse **head);
+int semesterLessThanCheck(char sem1[], char sem2[]);
+void insertSorted(transcriptCourse **head, struct individualCourse * course, char semester[], char grade[]);
+void removeSorted(transcriptCourse** phead, struct individualCourse * course, char semester[]);
+int semesterGreaterThanCheck(char sem1[], char sem2[]);
+void removeSortedOneCourse(transcriptCourse** phead, struct individualCourse * course);
+void printList(const transcriptCourse *head);
 /*
 //define a struct to represent an individual course
 struct individualCourse{
@@ -51,12 +63,12 @@ struct individualCourse {
 };
 
 
-struct transcriptCourse {
+typedef struct transcriptCourse {
 	struct transcriptCourse *next;
 	struct individualCourse course;
 	char semester[7];
 	char grade[3];
-};
+} transcriptCourse;
 
 //IDEA: STRCMP TO STRING IN CATALOG ARRAY
 
@@ -114,7 +126,10 @@ for(int i=0; i<len; i++) {
 
 
 
-struct transcriptCourse * studentTranscript;
+//struct transcriptCourse * studentTranscript;
+transcriptCourse * head = NULL;
+//head = malloc(sizeof(transcriptCourse));
+//assert(head != NULL);
 
 
 
@@ -215,6 +230,7 @@ new_credit_prompt();
 		new_credit_prompt;
 	}
 	*/
+//int decimalNumAsInt = (int) (inputCredits*10);
 
 //update corresponding course's entry in the catalog with new title
 	for (int i = 0; i<len; i++) {
@@ -231,10 +247,16 @@ new_credit_prompt();
 
 //add a course to the student transcript:
 case '5':
+	
+	int gotostepb = 0;
+	char semesterTemp[7];
+	char gradeTemp[3];
+	do {
 	//steps b-d in separate function
 	newIndividualCourse = getValidInput(catalog, len);
 
 int valid = 0;
+
 while (valid == 0) {
 	valid = 1;
 
@@ -291,6 +313,7 @@ while (valid == 0) {
 } //end of loop to get proper semester format
 
 valid = 0;
+
 while(valid == 0) {
 	valid = 1;
 	grade_prompt();
@@ -313,7 +336,7 @@ if (valid != 0) {
 		valid = 0;
 		clear();
 	}
-	char gradeTemp[3];
+	
 	strcpy(gradeTemp, tempString);
 
 	gradeTemp[0] = toupper(gradeTemp[0]);
@@ -353,21 +376,166 @@ if (valid != 0) {
 
 
 //studentTranscript = 
+//transcriptCourse *e = Create(newIndividualCourse, semesterTemp, gradeTemp);
+transcriptCourse *e;
 
+//check if the same course with the same semester already exists in the list
+int exists = 0;
 
+	if (!head) {
+		exists=0;
+	}
+	for(e=head;e->next!=NULL;e=e->next) {
+	if ((strcmp((e->course->courseDiv),newInividualCourse->courseDiv) == 0) && (strcmp((e->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e->course->courseNum),newIndividualCourse->courseNum) == 0) && (strcmp((e->semester),semesterTemp))) {
+		exists = 1;
+	} 
+	}
 
+	if (exists == 1) {
+		duplicate_course_msg();
+		gotostepb = 1;
+	}
+} (while gotostepb);
 
+//add entry to the transcript list
 
+//void insertSorted(transcriptCourse **head, struct individualCourse * course, char[] semester, char[] grade) 
+transcriptCourse **headPtr = &head;
+insertSorted(headPtr, newIndividualCourse, semesterTemp, gradeTemp);
+
+transcript_updated_msg();
 
 // look up memcpy
   break;
 
+
+
 //remove a course from the student transcript:
 case '6':
+
+	int gotostepb=0;
+	int exists = 0;
+
+	do  {
+	//steps b-d in separate function
+	newIndividualCourse = getValidInput(catalog, len);
+
+//check if the course exists in the catalog
+
+	exists = 0;
+
+	if (!head) {
+		exists=0;
+	}
+	transcriptCourse *e;
+
+	for(e=head;e->next!=NULL;e=e->next) {
+	if ((strcmp((e->course->courseDiv),newInividualCourse->courseDiv) == 0) && (strcmp((e->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e->course->courseNum),newIndividualCourse->courseNum) == 0)) {
+		exists += 1;
+	} 
+	}
+
+	if (exists == 0) {
+		course_absent_msg();
+		gotostepb = 1;
+	}
+} while (gotostepb);
+
+int skip = 0;
+
+if (exists == 1) {
+	transcriptCourse **headPtr2= &head;
+	removeSortedOneCourse(headPtr2, newIndividualCourse);
+	transcript_updated_msg();
+	skip = 1;
+}
+
+if (!skip) {
+	int valid = 0;
+	semesterTemp[7];
+	int courseTaken = 0;
+while ((valid == 0) || (courseTaken == 0)) {
+	valid = 1;
+
+	semester_prompt();
+	char semesterTemp[7];
+	char stringTemp[7] = {'0', '0', '0', '0', '0', '0', '\0'};
+	/*
+	if (fscanf(stdin, " %s", stringTemp) == 0) {
+
+	}
+	*/
+	int cond = 1;
+	char c;
+	for (int i=0; (cond && (i<7)) == 1; i++) {
+		c = getc(stdin);
+		if (c == '\n') {
+			valid = 0;
+			cond = 0;
+		}
+		else {
+			stringTemp[i] = c;
+		}
+	}
+
+	
+	
+	if (valid != 0) {
+	
+	if (getc(stdin) != '\n') {
+		valid = 0;
+		clear();
+	}
+
+	char semesterTemp[7];
+	strcpy(semesterTemp, stringTemp);
+	
+	
+	for (int i=0; i<4;i++) {
+		if (isdigit(semesterTemp[i])==0) {
+			valid = 0;
+		}
+	}
+
+	if (semesterTemp[4] != '.') {
+		valid = 0;
+	}
+
+	semesterTemp[5] = toupper(semesterTemp[5]);
+	if (semesterTemp[5] != 'F' && semesterTemp[5] != 'S') {
+		valid = 0;
+	}
+
+	transcriptCourse *e;
+	for(e=head;e->next!=NULL;e=e->next) {
+	if ((strcmp((e->course->courseDiv),newInividualCourse->courseDiv) == 0) && (strcmp((e->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e->course->courseNum),newIndividualCourse->courseNum) == 0)) {
+		if(strcmp((e->semester),semesterTemp) == 0) {
+			courseTaken=1;
+		}
+	} 
+	}
+
+}
+	
+} //end of loop to get proper semester format and check if course wa taken in that semester
+
+//Delete the specific course from the transcript list
+transcriptCourse** headPtr2 = &head;
+removeSorted(headPtr2, newIndividualCourse, semesterTemp);
+
+}
+
   break;
 
 //display the current transcript:
 case '7':
+	if (head == NULL) {
+		empty_transcript_msg();
+	}
+	else {
+		printList(head);
+
+	}
   break;
 
 //display information about a specific course in the transcript:
@@ -542,4 +710,165 @@ return inputCoursePtr;
 //function to clear the stdin buffer past the newline char from previous input
 void clear(void) {
 	while(getchar() != '\n');
+}
+
+
+transcriptCourse* Create(struct individualCourse * course, char[] semester, char[] grade) {
+	transcriptCourse *e = malloc(sizeof(transcriptCourse));
+	assert(e);
+	e->next = NULL;
+	e->course = course;
+	e->semester = semester;
+	e->grade = grade;
+	return e;
+}
+/*
+void InsertAfter(transcriptCourse *e, struct individualCourse *course, char[] semester, char[] grade) {
+	transcriptCourse *newE = Create(course, semester, grade);
+	newE->next = e->next;
+	e->next = newE;
+}
+
+void InsertHead(transcriptCourse **head, struct individualCourse *course, char[] semester, char[] grade) {
+	transcriptCourse *e = Create(course, semester, grade);
+	e->next = *head;
+	*head = e;
+}
+
+void DeleteAfter(transcriptCourse *e) {
+	transcriptCourse* eNext = e->next;
+	if(!eNext) return;
+	e->next = e->next->next;
+	free(eNext);
+}
+
+void DeleteHead(transcriptCourse **head) {
+	transcriptCourse** e = (*head);
+	*head = e->next;
+	free(e);
+}
+*/
+void insertSorted(transcriptCourse **head, struct individualCourse * course, char semester[], char grade[]) {
+	transcriptCourse *p = *head;
+	transcriptCourse *q = p;
+	while(p != NULL && semesterLessThanCheck((p->semester), semester)) {
+		q=p;
+		p=p->next;
+	}
+
+	transcriptCourse * elem = malloc(sizeof(transcriptCourse));
+	elem->course = course;
+	elem->semester = semester;
+	elem->grade = grade;
+
+	if (p == *head) {
+		//first element or empty list
+		*head = elem;
+		elem->next = p;
+	} else {
+		//we're in the middle or end
+		elem->next = p;
+		q->next = elem;
+	}
+
+	}
+
+
+//function to compare whether a semester is "less than" or earlier than another
+//returns 1 if first argument is less than second and zero if they're equal or if 1st is greater than 2nd
+int semesterLessThanCheck(char sem1[], char sem2[]) {
+	int value = 1;
+	
+char tempSem1[5] = {sem1[0],sem1[1],sem1[2],sem1[3],'\0'};
+char tempSem2[5] = {sem2[0],sem2[1],sem2[2],sem2[3],'\0'};
+intSem1 = atoi(tempsem1);
+intSem2 = atoi(tempsem2);
+	if(intSem1 > intSem2) {
+		value = 0;
+	}
+
+	else if (intSem1 == intSem2) {
+		if (sem1[5] <= sem2[5]) {
+			value = 0;
+		}
+	}
+
+	return value;
+}
+
+void removeSorted(transcriptCourse** phead, struct individualCourse * course, char semester[]) {
+	transcriptCourse* p = *phead;
+	transcriptCourse* q = p;
+
+
+	while(p != NULL && !((strcmp((p->course->courseDiv),newInividualCourse->courseDiv) == 0) && (strcmp((p->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((p->course->courseNum),newIndividualCourse->courseNum) == 0) && (strcmp((p->semester),semester)==0))) {
+	 //semesterLessThanCheck((p->semester), semester)) {
+		q=p;
+		p=p->next;
+	}
+	/*
+	if (p == NULL || semesterGreaterThanCheck((p->semester), semester)) {
+		//some error
+		return;
+	}
+	*/
+	if (p == *phead) {
+		//first element
+		*phead = p->next;
+	} else {
+		q->next = p->next;
+	}
+	free(p);
+}
+
+//function to compare whether a semester is "greater than" or later than another
+//returns 1 if first argument is greater than second and zero if they're equal or if 1st is less than 2nd
+int semesterGreaterThanCheck(char sem1[], char sem2[]) {
+	int value = 1;
+	
+char tempSem1[5] = {sem1[0],sem1[1],sem1[2],sem1[3],'\0'};
+char tempSem2[5] = {sem2[0],sem2[1],sem2[2],sem2[3],'\0'};
+intSem1 = atoi(tempsem1);
+intSem2 = atoi(tempsem2);
+	if(intSem1 < intSem2) {
+		value = 0;
+	}
+
+	else if (intSem1 == intSem2) {
+		if (sem1[5] >= sem2[5]) {
+			value = 0;
+		}
+	}
+
+	return value;
+}
+
+void removeSortedOneCourse(transcriptCourse** phead, struct individualCourse * course) {
+	transcriptCourse* p = *phead;
+	transcriptCourse* q = p;
+
+
+	while(p != NULL && !((strcmp((p->course->courseDiv),newInividualCourse->courseDiv) == 0) && (strcmp((p->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((p->course->courseNum),newIndividualCourse->courseNum) == 0))) {
+		q=p;
+		p=p->next;
+	}
+	/*
+	if (p == NULL || semesterGreaterThanCheck((p->semester), semester)) {
+		//some error
+		return;
+	}
+	*/
+	if (p == *phead) {
+		//first element
+		*phead = p->next;
+	} else {
+		q->next = p->next;
+	}
+	free(p);
+}
+
+void printList(const transcriptCourse *head) {
+	for(const transcriptCourse* e=head; e!=NULL; e=e->next) {
+		printf("%s %s %s.%s.%s %f %s\n", e->semester, e->grade, e->course->courseDiv, e->course->courseDep, e->course->courseNum, e->course->credits, e->course->courseTitle);
+	}
 }
