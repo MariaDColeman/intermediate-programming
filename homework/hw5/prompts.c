@@ -1,4 +1,19 @@
+#include "prompts.h"
 #include <stdio.h>
+
+/*
+Maria Coleman
+600,120
+4/2/2017
+homework 5
+mcolem31
+mcolem31@jhu.edu
+ */
+
+
+//function definitions for prompts
+
+
 
 void menu_prompt() {
     printf(
