@@ -7,7 +7,7 @@ Homework 5
 
 Maria Coleman
 
-date due
+date due: 4/2/17
 
 */
 
@@ -39,7 +39,7 @@ struct individualCourse {
 
 typedef struct transcriptCourse {
   struct transcriptCourse *next;
-  struct individualCourse course;
+  struct individualCourse *course;
   char semester[7];
   char grade[3];
 } transcriptCourse;
@@ -59,36 +59,7 @@ void removeSorted(transcriptCourse** phead, struct individualCourse * course, ch
 int semesterGreaterThanCheck(char sem1[], char sem2[]);
 void removeSortedOneCourse(transcriptCourse** phead, struct individualCourse * course);
 void printList(transcriptCourse *head);
-/*
-//define a struct to represent an individual course
-struct individualCourse{
-	char courseDiv[3];
-	int courseDep;
-	int courseNum;
-	float credits;
-	char courseTitle[33];
-};
-*/
 
-/*
-//define a struct to represent an individual course
-struct individualCourse {
-	char courseDiv[3];
-	char courseDep[4];
-	char courseNum[4];
-	float credits;
-	char courseTitle[33];
-};
-
-
-typedef struct transcriptCourse {
-	struct transcriptCourse *next;
-	struct individualCourse course;
-	char semester[7];
-	char grade[3];
-} transcriptCourse;
-*/
-//IDEA: STRCMP TO STRING IN CATALOG ARRAY
 
 int main(int argc, char* argv[]) {
 
@@ -145,9 +116,9 @@ for(int i=0; i<len; i++) {
 
 
 //struct transcriptCourse * studentTranscript;
-transcriptCourse* head;
-head = malloc(sizeof(transcriptCourse));
-//assert(head != NULL);
+ transcriptCourse* head;
+ head = malloc(sizeof(transcriptCourse));
+assert(head != NULL);
 
 
 
@@ -160,9 +131,10 @@ char nextChar;
  int valid=0;
  char semesterTemp[7];
  char gradeTemp[3];
+ double gpa;
  do {
 	menu_prompt();
-	scanf("%c%c", &menuInput, &nextChar);
+	scanf(" %c%c", &menuInput, &nextChar);
 
 	while(nextChar != '\n') {
 		while(getchar() != '\n');
@@ -177,7 +149,11 @@ switch(menuInput) {
 case 'q':
 case 'Q':
 	//maybe free things, maybe put it after switch
-	break;
+  //free(catalog);
+  free(head);
+  free(catalog);
+  // free(newIndividualCourse);
+  break;
 
 //display the catalog:
 case '1':
@@ -190,7 +166,7 @@ case '1':
 case '2':
     newIndividualCourse = getValidInput(catalog, len);
  printf("%s.%s.%s %.1f %s\n", newIndividualCourse->courseDiv, newIndividualCourse->courseDep, newIndividualCourse->courseNum, newIndividualCourse->credits, newIndividualCourse->courseTitle);
-  break;
+ break;
 
 //update the title of a specific course:
 case '3':
@@ -258,6 +234,7 @@ new_credit_prompt();
 		if ((strcmp((catalog[i].courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((catalog[i].courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((catalog[i].courseNum),newIndividualCourse->courseNum) == 0)) {
 		  
 		  catalog[i].credits = inputCredits;
+		  newIndividualCourse->credits = catalog[i].credits;
 		}
 	}
 
@@ -269,13 +246,15 @@ new_credit_prompt();
 //add a course to the student transcript:
 case '5':
 	
-  //int gotostepb = 0;
+   gotostepb = 0;
   //  char semesterTemp[7];// = {'0','0','0','0','0','0','\0'};
   //char gradeTemp[3];
-	do {
+   
+  do {
+    // free(newIndividualCourse);
 	//steps b-d in separate function
 	newIndividualCourse = getValidInput(catalog, len);
-
+	//free(inputCoursePtr);
 	valid = 0;
 	
 	while (valid == 0) {
@@ -290,7 +269,7 @@ case '5':
 	*/
 	int cond = 1;
 	char c;
-	for (int i=0; (cond && (i<7)) == 1; i++) {
+	for (int i=0; (cond && (i<6)) == 1; i++) {
 		c = getc(stdin);
 		if (c == '\n') {
 			valid = 0;
@@ -341,7 +320,7 @@ while(valid == 0) {
 	char tempString[3] = {'0','0','\0'};
 	int cond = 1;
 	char c;
-	for (int i=0; (cond && (i<7)) == 1; i++) {
+	for (int i=0; (cond && (i<2)) == 1; i++) {
 		c=getc(stdin);
 		if (c == '\n') {
 			valid = 0;
@@ -398,7 +377,7 @@ if (valid != 0) {
 
 //studentTranscript = 
 //transcriptCourse *e = Create(newIndividualCourse, semesterTemp, gradeTemp);
- transcriptCourse *e;// = NULL;
+ transcriptCourse *e2;// = NULL;
 //int gotostepb = 0;
 //check if the same course with the same semester already exists in the list
 int exists = 0;
@@ -406,28 +385,35 @@ int exists = 0;
 	if (!head) {
 		exists=0;
 	}
-	for(e=head;e->next!=NULL;e=e->next) {
-	if ((strcmp((e->course.courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((e->course.courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e->course.courseNum),newIndividualCourse->courseNum) == 0) && (strcmp((e->semester),semesterTemp))) {
+	//e = head;
+	for(e2=head;(e2->next)!=NULL;e2=e2->next) {
+	if ((strcmp((e2->course->courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((e2->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e2->course->courseNum),newIndividualCourse->courseNum) == 0) && (strcmp((e2->semester),semesterTemp))) {
 		exists = 1;
 	} 
 	}
-
+	//free(e2);
 	if (exists == 1) {
 		duplicate_course_msg();
 		gotostepb = 1;
+		//free(newIndividualCourse);
 	}
-	} while (gotostepb);
-
+	//free(e2);
+	
+    } while (gotostepb);
+  //  free(e2);
 //add entry to the transcript list
 
 //void insertSorted(transcriptCourse **head, struct individualCourse * course, char[] semester, char[] grade) 
 transcriptCourse **headPtr = &head;
 insertSorted(headPtr, newIndividualCourse, semesterTemp, gradeTemp);
-
+//free(headPtr);
+//free(newIndividualCourse);
 transcript_updated_msg();
-
+// free(headPtr);
+ //free(e);
 // look up memcpy
-  break;
+//free(newIndividualCourse);
+ break;
 
 
 
@@ -448,10 +434,10 @@ case '6':
 	if (!head) {
 		exists=0;
 	}
-	transcriptCourse *e;
-
+	transcriptCourse *e;// = head;
+	
 	for(e=head;(e->next)!=NULL;e=e->next) {
-	if ((strcmp((e->course.courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((e->course.courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e->course.courseNum),newIndividualCourse->courseNum) == 0)) {
+	if ((strcmp((e->course->courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((e->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e->course->courseNum),newIndividualCourse->courseNum) == 0)) {
 		exists += 1;
 	} 
 	}
@@ -528,8 +514,8 @@ while ((valid == 0) || (courseTaken == 0)) {
 	}
 
 	transcriptCourse *e;
-	for(e=head;e->next!=NULL;e=e->next) {
-	if ((strcmp((e->course.courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((e->course.courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e->course.courseNum),newIndividualCourse->courseNum) == 0)) {
+	for(e=head;(e->next)!=NULL;e=e->next) {
+	if ((strcmp((e->course->courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((e->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e->course->courseNum),newIndividualCourse->courseNum) == 0)) {
 		if(strcmp((e->semester),semesterTemp) == 0) {
 			courseTaken=1;
 		}
@@ -550,7 +536,7 @@ removeSorted(headPtr2, newIndividualCourse, semesterTemp);
 
 //display the current transcript:
 case '7':
-	if (head == NULL) {
+  if (head == NULL) {
 		empty_transcript_msg();
 	}
 	else {
@@ -561,10 +547,89 @@ case '7':
 
 //display information about a specific course in the transcript:
 case '8':
+
+  gotostepb=0;
+  int exists2=0;
+
+  do {
+  newIndividualCourse = getValidInput(catalog, len);
+
+  exists2 = 0;
+
+  if (!head) {
+    exists2 = 0;
+  }
+  transcriptCourse *e;
+
+  for(e=head;(e->next)!=NULL;e=e->next) {
+    if ((strcmp((e->course->courseDiv),newIndividualCourse->courseDiv)==0) && (strcmp((e->course->courseDep),newIndividualCourse->courseDep)==0) && (strcmp((e->course->courseNum),newIndividualCourse->courseNum)==0)) {
+      exists2 +=1;
+      printf("%s %s\n", e->semester, e->grade);
+    }
+  }
+  if(exists2 == 0) {
+    course_absent_msg();
+    gotostepb = 1;
+  }
+  } while (gotostepb);
+
+  
+
   break;
 
 //compute the cumulative GPA for the student:
 case '9':
+
+  
+  if (head==NULL) {
+    gpa = 0;
+  }
+  else {
+    transcriptCourse *e;
+    double points = 0;
+    double pointSum = 0;
+    double creditSum = 0;
+    for(e=head;(e->next)!=NULL;e=e->next) {
+      if(((e->grade)[0] != 'I')&&((e->grade)[0] != 'S')&&((e->grade)[0] != 'U')) {
+	switch((e->grade)[0]) {
+	case 'A':
+	  points = 4;
+	  break;
+	case 'B':
+	  points = 3;
+	  break;
+	case 'C':
+	  points = 2;
+	  break;
+	case 'D':
+	  points = 1;
+	  break;
+	case 'F':
+	  points = 0;
+	  break;
+
+	}//end of switch
+	//only add 0.3 for a + if its not an A or F
+	if(((e->grade)[0]!='A')&&((e->grade)[0]!='F')&&((e->grade)[1]=='+')) {
+	  points += 0.3;
+	}
+	//only subtract 0.3 for a - if its not a D or F
+	if(((e->grade)[0]!='D')&&((e->grade)[0]!='F')&&((e->grade)[1]=='-')) {
+	  points -= 0.3;
+	}
+
+	pointSum += points * (e->course->credits);
+	creditSum += (e->course->credits);
+      }
+
+      
+    }
+    //free(e);
+
+    gpa = pointSum / creditSum;
+  }
+  gpa_msg(gpa);
+  
   break;
 
 default:
@@ -600,14 +665,15 @@ return len;
 //function to take care of steps b-d in homework prompts
 //return a struct or a pointer to a struct of an individual course
 struct individualCourse* getValidInput(struct individualCourse *catalog, int len) {
-	struct individualCourse *inputCoursePtr;
+ 
+        struct individualCourse *inputCoursePtr;
 	inputCoursePtr = malloc(sizeof(struct individualCourse));
 
 	char newCourseDiv[3];
 	char newCourseDep[4];
 	char newCourseNum[4];
-	float newCredits;
-	char newCourseTitle[33];
+	//float newCredits;
+	//char newCourseTitle[33];
 	int valid = 1;
 	int present = 0;
 	
@@ -619,17 +685,20 @@ struct individualCourse* getValidInput(struct individualCourse *catalog, int len
 
 	int cond=1;
 	char c;
-	for(int i=0; (cond && (i<3)); i++) {
+	for(int i=0; (cond && (i<2)); i++) {
 		c = getc(stdin);
+		
 		if (c == '\n') {
 			valid = 0;
 			cond = 0;
+			invalid_input_msg();
+			clear();
 		}
 		else {
 			newCourseDivTemp[i] = c;
 		}
 	}
-	//if (valid) 
+	if (valid) {
 	for (int i=0;  i<2; i++) {
 		newCourseDivTemp[i] = toupper(newCourseDivTemp[i]); 
 	}
@@ -637,7 +706,8 @@ struct individualCourse* getValidInput(struct individualCourse *catalog, int len
 	strcpy(newCourseDiv, newCourseDivTemp);
 
 	if ((getc(stdin)) != '.') {
-		invalid_input_msg();
+	  // printf("next is next dot");
+	  invalid_input_msg();
 		valid = 0;
 
 		//for (char c = getc(stdin); c != '\n'; c = getc(stdin));
@@ -646,9 +716,9 @@ struct individualCourse* getValidInput(struct individualCourse *catalog, int len
 	else {
 	 char newCourseDepTemp[4] = {'0', '0', '0', '\0'};
 
-	int cond=1;
-	char c;
-	for(int i=0; (cond && (i<4))==1; i++) {
+	cond=1;
+	//char c;
+	for(int i=0; (cond && (i<3))==1; i++) {
 		c = getc(stdin);
 		if (c == '\n') {
 			valid = 0;
@@ -672,7 +742,7 @@ struct individualCourse* getValidInput(struct individualCourse *catalog, int len
 		  char newCourseNumTemp[4] = {'0', '0', '0', '\0'};
 	int cond=1;
 	char c;
-	for(int i=0; (cond && (i<4))==1; i++) {
+	for(int i=0; (cond && (i<3))==1; i++) {
 		c = getc(stdin);
 		if (c == '\n') {
 			valid = 0;
@@ -692,6 +762,7 @@ struct individualCourse* getValidInput(struct individualCourse *catalog, int len
 			}
 		}
 	}
+}
 
 if (valid) {
 //check if the course exists in the catalog
@@ -699,9 +770,13 @@ if (valid) {
 for (int i = 0; i<len; i++) {
 	if ((strcmp((catalog[i].courseDiv),newCourseDiv) == 0) && (strcmp((catalog[i].courseDep),newCourseDep) == 0) && (strcmp((catalog[i].courseNum),newCourseNum) == 0)) {
 		present = 1;
-		newCredits = catalog[i].credits;
+		//newCredits = catalog[i].credits;
 		//newCourseTitle = catalog[i].courseTitle;
-		strcpy(newCourseTitle, (catalog[i].courseTitle));
+		//inputCoursePtr->credits = catalog[i].credits;
+		
+
+		inputCoursePtr = &(catalog[i]);
+		//NEED THIS JUST TOOK OUT 7pm: strcpy(newCourseTitle, (catalog[i].courseTitle));
 	}
 
 }
@@ -710,20 +785,14 @@ if (!present) {
 }
 }
 	} while ((!valid) || (!present));
-
-	/*
-//put into struct
-inputCoursePtr->courseDiv = newCourseDiv;
-inputCoursePtr->courseDep = newCourseDep;
-inputCoursePtr->courseNum = newCourseNum;
-inputCoursePtr->credits = newCredits;
-inputCoursePtr->courseTitle = newCourseTitle;
-	*/
+/*
 	strcpy((inputCoursePtr->courseDiv), newCourseDiv);
 	strcpy((inputCoursePtr->courseDep), newCourseDep);
 	strcpy((inputCoursePtr->courseNum), newCourseNum);
 	inputCoursePtr->credits = newCredits;
 	strcpy((inputCoursePtr->courseTitle), newCourseTitle);
+	//inputCoursePtr->credits = catalog[i].credits;
+	*/
 return inputCoursePtr;
 }
 
@@ -738,7 +807,7 @@ transcriptCourse* Create(struct individualCourse * course, char semester[], char
 	transcriptCourse *e = malloc(sizeof(transcriptCourse));
 	assert(e);
 	e->next = NULL;
-	e->course = *course;
+	e->course = course;
 	//e->semester = semester;
 	strcpy((e->semester),semester);
 	//e->grade = grade;
@@ -771,16 +840,17 @@ void DeleteHead(transcriptCourse **head) {
 	free(e);
 }
 */
-void insertSorted(transcriptCourse **head, struct individualCourse * course, char semester[], char grade[]) {
-	transcriptCourse *p = *head;
-	transcriptCourse *q = p;
-	while(p != NULL && semesterLessThanCheck((p->semester), semester)) {
+void insertSorted(transcriptCourse **head, struct individualCourse * course2, char semester[], char grade[]) {
+  transcriptCourse *p = *head;
+  // p=p->next;
+  transcriptCourse *q = p;
+  while((p->next) != NULL && semesterLessThanCheck((p->semester), semester)) {
 		q=p;
 		p=p->next;
 	}
 
-	transcriptCourse * elem = malloc(sizeof(transcriptCourse));
-	elem->course = *course;
+	transcriptCourse* elem = malloc(sizeof(transcriptCourse));
+	(elem->course) = course2;
 	//elem->semester = semester;
 	strcpy((elem->semester),semester);
 	//elem->grade = grade;
@@ -795,8 +865,11 @@ void insertSorted(transcriptCourse **head, struct individualCourse * course, cha
 		elem->next = p;
 		q->next = elem;
 	}
+	//	free(course);
+}
 
-	}
+	
+
 
 
 //function to compare whether a semester is "less than" or earlier than another
@@ -826,7 +899,7 @@ void removeSorted(transcriptCourse** phead, struct individualCourse * newIndivid
 	transcriptCourse* q = p;
 
 
-	while(p != NULL && !((strcmp((p->course.courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((p->course.courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((p->course.courseNum),newIndividualCourse->courseNum) == 0) && (strcmp((p->semester),semester)==0))) {
+	while(p != NULL && !((strcmp((p->course->courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((p->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((p->course->courseNum),newIndividualCourse->courseNum) == 0) && (strcmp((p->semester),semester)==0))) {
 	 //semesterLessThanCheck((p->semester), semester)) {
 		q=p;
 		p=p->next;
@@ -873,7 +946,7 @@ void removeSortedOneCourse(transcriptCourse** phead, struct individualCourse * n
 	transcriptCourse* q = p;
 
 
-	while(p != NULL && !((strcmp((p->course.courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((p->course.courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((p->course.courseNum),newIndividualCourse->courseNum) == 0))) {
+	while(p != NULL && !((strcmp((p->course->courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((p->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((p->course->courseNum),newIndividualCourse->courseNum) == 0))) {
 		q=p;
 		p=p->next;
 	}
@@ -893,7 +966,8 @@ void removeSortedOneCourse(transcriptCourse** phead, struct individualCourse * n
 }
 
 void printList(transcriptCourse *head) {
-	for(transcriptCourse* e=head; e!=NULL; e=e->next) {
-		printf("%s %s %s.%s.%s %f %s\n", e->semester, e->grade, e->course.courseDiv, e->course.courseDep, e->course.courseNum, e->course.credits, e->course.courseTitle);
+  transcriptCourse* e;// = head;
+  for(e=head; (e->next)!=NULL; e=e->next) {
+		printf("%s %s %s.%s.%s %.1f %s\n", e->semester, e->grade, e->course->courseDiv, e->course->courseDep, e->course->courseNum, e->course->credits, e->course->courseTitle);
 	}
 }
