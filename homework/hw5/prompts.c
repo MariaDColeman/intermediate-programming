@@ -17,20 +17,20 @@ mcolem31@jhu.edu
 
 void menu_prompt() {
     printf(
-      "Course database\n"
-      "---------------\n"
-      "1. Display catalog\n"
-      "2. Display course info\n"
-      "3. Update course title\n"
-      "4. Update course credits\n"
-      "5. Add course to transcript\n"
-      "6. Remove course from student transcript\n"
-      "7. Display student transcript\n"
-      "8. Display course transcript info\n"
-      "9. Compute transcript GPA\n"
-      "q. Quit\n"
-      "\n"
-      "Enter your choice:\n");
+        "Course database\n"
+        "---------------\n"
+        "1. Display catalog\n"
+        "2. Display course info\n"
+        "3. Update course title\n"
+        "4. Update course credits\n"
+        "5. Add course to transcript\n"
+        "6. Remove course from student transcript\n"
+        "7. Display student transcript\n"
+        "8. Display course transcript info\n"
+        "9. Compute transcript GPA\n"
+        "q. Quit\n"
+        "\n"
+        "Enter your choice:\n");
 }
 
 void course_absent_msg() {
