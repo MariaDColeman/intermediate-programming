@@ -36,3 +36,4 @@ void removeSorted(transcriptCourse** phead, struct individualCourse * course, ch
 int semesterGreaterThanCheck(char sem1[], char sem2[]);
 void removeSortedOneCourse(transcriptCourse** phead, struct individualCourse * course);
 void printList(transcriptCourse *head);
+transcriptCourse* create(struct individualCourse *course, char semester[], char grade[]);

@@ -41,7 +41,7 @@ return len;
 struct individualCourse* getValidInput(struct individualCourse *catalog, int len) {
  
         struct individualCourse *inputCoursePtr;
-	inputCoursePtr = malloc(sizeof(struct individualCourse));
+	//inputCoursePtr = malloc(sizeof(struct individualCourse));
 
 	char newCourseDiv[3];
 	char newCourseDep[4];
@@ -146,7 +146,10 @@ if (!present) {
 }
 	} while ((!valid) || (!present));
 
-return inputCoursePtr;
+	//struct individualCourse *send = inputCoursePtr;
+	//free(inputCoursePtr);
+	return inputCoursePtr;
+	//return send;
 }
 
 
@@ -166,7 +169,7 @@ void insertSorted(transcriptCourse **head, struct individualCourse * course2, ch
 		p=p->next;
 	}
 
-	transcriptCourse* elem = malloc(sizeof(transcriptCourse));
+  transcriptCourse* elem = malloc(sizeof(transcriptCourse));
 	(elem->course) = course2;
 	//elem->semester = semester;
 	strcpy((elem->semester),semester);
@@ -182,7 +185,7 @@ void insertSorted(transcriptCourse **head, struct individualCourse * course2, ch
 		elem->next = p;
 		q->next = elem;
 	}
-	//	free(course);
+	//free(course2);
 }
 
 	
@@ -284,7 +287,18 @@ void removeSortedOneCourse(transcriptCourse** phead, struct individualCourse * n
 
 void printList(transcriptCourse *head) {
   transcriptCourse* e;
-  for(e=head; (e->next)!=NULL; e=e->next) {
+  for(e=head; (e)!=NULL; e=e->next) {
 		printf("%s %s %s.%s.%s %.1f %s\n", e->semester, e->grade, e->course->courseDiv, e->course->courseDep, e->course->courseNum, e->course->credits, e->course->courseTitle);
 	}
 }
+
+transcriptCourse* create(struct individualCourse *course, char semester[], char grade[]) {
+  transcriptCourse *e = malloc(sizeof(transcriptCourse));
+  assert(e);
+  e->next = NULL;
+  e->course = course;
+  strcpy((e->semester),semester);
+  strcpy((e->grade),grade);
+  return e;
+}
+

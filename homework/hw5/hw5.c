@@ -25,8 +25,6 @@ date due: 4/2/17
 
 
 
-
-
 int main(int argc, char* argv[]) {
 
 //confirm that a command-line argument is present (and only the name of the catalog text input file)
@@ -54,46 +52,36 @@ if (!filehandleIN) {
 
 int len = numLines(filehandleIN);
 
-//struct individualCourse catalog[length];
 
 struct individualCourse * catalog;
 catalog = malloc(sizeof(struct individualCourse) * len);
 
 for(int i=0; i<len; i++) {
   char tempStr[3] = {getc(filehandleIN), getc(filehandleIN), '\0'};
-  //catalog[i].courseDiv = {getc(filehandleIN), getc(filehandleIN), '\0'};
+  
   strcpy((catalog[i].courseDiv), tempStr);
   getc(filehandleIN); //read the period character
   char tempStr2[4] = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
-  //catalog[i].courseDep = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
+  
   strcpy((catalog[i].courseDep), tempStr2);
   getc(filehandleIN); //read the period character
   char tempStr3[4] = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
-  //catalog[i].courseNum = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
+  
   strcpy((catalog[i].courseNum), tempStr3);
   fscanf(filehandleIN, "%f ", &(catalog[i].credits));
-	fgets(catalog[i].courseTitle, 33, filehandleIN); //hoping this will start where it is in line and go to end of line
-	//getc(filehandleIN); //hoping this will read the newline character
+	fgets(catalog[i].courseTitle, 33, filehandleIN); 
+
 }
 
-//REMEMBER TO FREE CATALOG
 
 
-
-
-//struct transcriptCourse * studentTranscript;
- transcriptCourse* head;
- head = malloc(sizeof(transcriptCourse));
-assert(head != NULL);
-
-
-
-
+ transcriptCourse* head = NULL; 
+ 
 
 char menuInput;
 char nextChar;
- struct individualCourse * newIndividualCourse;
- //newIndividualCourse = malloc(sizeof(individualCourse));
+struct individualCourse * newIndividualCourse;
+
  int valid=0;
  char semesterTemp[7];
  char gradeTemp[3];
@@ -110,15 +98,19 @@ char nextChar;
 
 switch(menuInput) {
   int gotostepb = 0;
-//if user enters the key for quit
-//as an integer Q is 81 and q is 113
+  
 case 'q':
 case 'Q':
-	//maybe free things, maybe put it after switch
-  //free(catalog);
-  free(head);
+	
   free(catalog);
-  // free(newIndividualCourse);
+ 
+  transcriptCourse *temp;
+  while (head != NULL) {
+    temp = head;
+    head=head->next;
+    free(temp);
+  }
+  free(head);
   break;
 
 //display the catalog:
@@ -130,8 +122,10 @@ case '1':
 
 //display information on a specific course in the catalog:
 case '2':
-    newIndividualCourse = getValidInput(catalog, len);
+
+  newIndividualCourse = getValidInput(catalog, len);
  printf("%s.%s.%s %.1f %s\n", newIndividualCourse->courseDiv, newIndividualCourse->courseDep, newIndividualCourse->courseNum, newIndividualCourse->credits, newIndividualCourse->courseTitle);
+
  break;
 
 //update the title of a specific course:
@@ -153,13 +147,13 @@ case '3':
 //update corresponding course's entry in the catalog with new title
 	for (int i = 0; i<len; i++) {
 		if ((strcmp((catalog[i].courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((catalog[i].courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((catalog[i].courseNum),newIndividualCourse->courseNum) == 0)) {
-		  //catalog[i].courseTitle = inputStr2;
-		  strcpy(catalog[i].courseTitle, inputStr2);
+			  strcpy(catalog[i].courseTitle, inputStr2);
 		}
 	}
 
 
 	course_updated_msg();
+	
 
   break;
 
@@ -179,28 +173,6 @@ case '4':
 	}
 
  } while (!success);
-//CAN DO atof if you get it in as a string and check its one digit.one digit
-//HAVE TO CHECK THE INVALID PARTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-
-//if ANY float is valid, then do this..nope not done have to think it though
-	//if its 3 digits do like "%c%c%c%c for a newline"
-	/*
-	scanf(" %f", &menuInput);
-
-	while(nextChar != '\n') {
-		while(getchar() != '\n');
-		menu_prompt();
-		scanf("%c%c", &menuInput, &nextChar);
-	}
-
-	this might be good enough if any float is valid!!!!!!!
-
-	while ((scanf(" %f", &inputCredits)) == 0) {
-		invalid_input_msg();
-		new_credit_prompt;
-	}
-	*/
-//int decimalNumAsInt = (int) (inputCredits*10);
 
 //update corresponding course's entry in the catalog with new title
 	for (int i = 0; i<len; i++) {
@@ -213,21 +185,25 @@ case '4':
 
 
 	course_updated_msg();
+
   break;
 
 
 //add a course to the student transcript:
 case '5':
 	
-   gotostepb = 0;
-
+  gotostepb = 0;
+   
    
   do {
-    // free(newIndividualCourse);
+   
 
+    gotostepb=0;
 	//steps b-d in separate function
-	newIndividualCourse = getValidInput(catalog, len);
-	//free(inputCoursePtr);
+     
+    
+    newIndividualCourse = getValidInput(catalog,len);
+  
 	valid = 0;
 	
 	while (valid == 0) {
@@ -277,7 +253,7 @@ case '5':
 
 }
 	
-} //end of loop to get proper semester format
+	} //end of loop to get proper semester format
 
 valid = 0;
 
@@ -346,39 +322,40 @@ if (valid != 0) {
 
 //check if the same course with the same semester already exists in the list
 int exists = 0;
-
-	if (!head) {
+ int skip2=1;
+	if (head == NULL) {
 		exists=0;
+		head = create(newIndividualCourse, semesterTemp, gradeTemp);
+		skip2=0;
+		
 	}
+	else {
+	for(e2=head;(e2)!=NULL;e2=e2->next) {
 	
-	for(e2=head;(e2->next)!=NULL;e2=e2->next) {
-	  if ((strcmp((e2->course->courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((e2->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e2->course->courseNum),newIndividualCourse->courseNum) == 0) && (strcmp((e2->semester),semesterTemp) == 0)) {
+	if ((strcmp((e2->course->courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((e2->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e2->course->courseNum),newIndividualCourse->courseNum) == 0) && (strcmp((e2->semester),semesterTemp) == 0)) {
 		exists = 1;
 	} 
 	}
-	//free(e2);
+       
 	if (exists == 1) {
 		duplicate_course_msg();
 		gotostepb = 1;
-		//free(newIndividualCourse);
 	}
-	//free(e2);
 	
-    } while (gotostepb);
-  //  free(e2);
+	}
 
-//add entry to the transcript list
+	if (!gotostepb){
+	  if (skip2) {
+	  transcriptCourse** headPtr = &head;
+	  insertSorted(headPtr, newIndividualCourse, semesterTemp, gradeTemp);
+	  }
+	  transcript_updated_msg();
+	}
+	
+  } while (gotostepb);
 
 
-transcriptCourse **headPtr = &head;
-insertSorted(headPtr, newIndividualCourse, semesterTemp, gradeTemp);
-//free(headPtr);
-//free(newIndividualCourse);
-transcript_updated_msg();
-// free(headPtr);
- //free(e);
-//free(newIndividualCourse);
- break;
+break;
 
 
 //remove a course from the student transcript:
@@ -386,7 +363,7 @@ case '6':
 
   gotostepb = 0;
 	int exists = 0;
-
+	
 	do  {
 	//steps b-d in separate function
 	newIndividualCourse = getValidInput(catalog, len);
@@ -399,7 +376,7 @@ case '6':
 	}
 	transcriptCourse *e;
 	
-	for(e=head;(e->next)!=NULL;e=e->next) {
+	for(e=head;(e)!=NULL;e=e->next) {
 	if ((strcmp((e->course->courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((e->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e->course->courseNum),newIndividualCourse->courseNum) == 0)) {
 		exists += 1;
 	} 
@@ -409,6 +386,7 @@ case '6':
 		course_absent_msg();
 		gotostepb = 1;
 	}
+	
 } while (gotostepb);
 
 int skip = 0;
@@ -473,7 +451,7 @@ while ((valid == 0) || (courseTaken == 0)) {
 	}
 
 	transcriptCourse *e;
-	for(e=head;(e->next)!=NULL;e=e->next) {
+	for(e=head;(e)!=NULL; e=e->next) {
 	if ((strcmp((e->course->courseDiv),newIndividualCourse->courseDiv) == 0) && (strcmp((e->course->courseDep),newIndividualCourse->courseDep) == 0) && (strcmp((e->course->courseNum),newIndividualCourse->courseNum) == 0)) {
 		if(strcmp((e->semester),semesterTemp) == 0) {
 			courseTaken=1;
@@ -483,13 +461,13 @@ while ((valid == 0) || (courseTaken == 0)) {
 
 }
 	
-} //end of loop to get proper semester format and check if course wa taken in that semester
+ } //end of loop to get proper semester format and check if course wa taken in that semester
 
 //Delete the specific course from the transcript list
 transcriptCourse** headPtr2 = &head;
 removeSorted(headPtr2, newIndividualCourse, semesterTemp);
 
-}
+ }
 
   break;
 
@@ -520,7 +498,7 @@ case '8':
   }
   transcriptCourse *e;
 
-  for(e=head;(e->next)!=NULL;e=e->next) {
+  for(e=head;(e)!=NULL;e=e->next) {
     if ((strcmp((e->course->courseDiv),newIndividualCourse->courseDiv)==0) && (strcmp((e->course->courseDep),newIndividualCourse->courseDep)==0) && (strcmp((e->course->courseNum),newIndividualCourse->courseNum)==0)) {
       exists2 +=1;
       printf("%s %s\n", e->semester, e->grade);
@@ -530,6 +508,7 @@ case '8':
     course_absent_msg();
     gotostepb = 1;
   }
+
   } while (gotostepb);
 
   
@@ -548,7 +527,7 @@ case '9':
     double points = 0;
     double pointSum = 0;
     double creditSum = 0;
-    for(e=head;(e->next)!=NULL;e=e->next) {
+    for(e=head;(e)!=NULL;e=e->next) {
       if(((e->grade)[0] != 'I')&&((e->grade)[0] != 'S')&&((e->grade)[0] != 'U')) {
 	switch((e->grade)[0]) {
 	case 'A':
@@ -599,7 +578,8 @@ default:
 
 } while ((menuInput != 'q') && (menuInput != 'Q')); //the menuInput variable is equal to Q or q when the user wants to quit
 
-	
+
+ 
 fclose(filehandleIN);
 filehandleIN = NULL;
 

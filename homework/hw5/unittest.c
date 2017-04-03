@@ -30,59 +30,6 @@ int main() {
     condition = 0;    
   }
 
-/*
-if (condition) {
-
-struct individualCourse * catalog;
-catalog = malloc(sizeof(struct individualCourse) * 15);
-
-for(int i=0; i<15; i++) {
-  char tempStr[3] = {getc(filehandleIN), getc(filehandleIN), '\0'};
-  //catalog[i].courseDiv = {getc(filehandleIN), getc(filehandleIN), '\0'};
-  strcpy((catalog[i].courseDiv), tempStr);
-  getc(filehandleIN); //read the period character
-  char tempStr2[4] = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
-  //catalog[i].courseDep = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
-  strcpy((catalog[i].courseDep), tempStr2);
-  getc(filehandleIN); //read the period character
-  char tempStr3[4] = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
-  //catalog[i].courseNum = {getc(filehandleIN), getc(filehandleIN), getc(filehandleIN), '\0'};
-  strcpy((catalog[i].courseNum), tempStr3);
-  fscanf(filehandleIN, "%f ", &(catalog[i].credits));
-  fgets(catalog[i].courseTitle, 33, filehandleIN); //hoping this will start where it is in line and go to end of line
-  //getc(filehandleIN); //hoping this will read the newline character
-
-
-struct individualCourse *tester = getValidInput(catalog, 15);
-
-
- transcriptCourse* head;
- head = malloc(sizeof(transcriptCourse));
-assert(head != NULL);
-
-
-
-
-
-
-free(catalog);
-}
-
-}
-*/ // MAYBE DO END TO END TESTING ON EXPECTED OUTPUTS JUST PRINT 
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 char sem1[] = {'2','0','1','2','.','F','\0'};
 char sem2[] = {'2','0','1','3','.','F','\0'};
