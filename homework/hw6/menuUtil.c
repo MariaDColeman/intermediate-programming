@@ -29,7 +29,7 @@ void userInput() {
 	int y2;
 	float amt;
 
-	Image *im;// = malloc(sizeof(Image));
+	Image *im = NULL;// = malloc(sizeof(Image));
 while(cond) {
 
 	printMenu();
@@ -44,37 +44,65 @@ while(cond) {
 			//Image *im = malloc(sizeof(Image));
 			//im = readImage(filename);
 			im = readImage(filename);
+			getc(stdin);
 			cond = 1;
 			break;
 		case 'w':
 
 			scanf(" %s", filename);
 			printf("Writing to %s...\n", filename);
+			if (im == NULL) {
+			  printf("Error: there is no current image\n");
+			}
+			else {
 			writeImage(im, filename);
+			}
+			getc(stdin);
 			cond = 1;
 			break;
 		case 'c':
 			scanf(" %d %d %d %d", &x1, &y1, &x2, &y2);
 			printf("Cropping region from (%d, %d) to (%d, %d)...\n", x1, y1, x2, y2);
 			//Image* newImage = malloc(sizeof(Image));
+			if (im == NULL) {
+			  printf("Error: there is no current image\n");
+			}
+			else {
 			im = crop(im, x1, y1, x2, y2);
+			}
+			getc(stdin);
 			cond = 1;
 			break;
 		case 'i':
 			printf("Inverting intensity...\n");
+			if (im == NULL) {
+			  printf("Error: there is no current image\n");
+			}
+			else {
 			invert(im);
+			}
 			fgetc(stdin); //read newline char
 			cond = 1;
 			break;
 		case 's':
 			printf("Swapping color channels...\n");
+			if (im == NULL) {
+			  printf("Error: there is no current image\n");
+			}
+			else {
 			swap(im);
+			}
 			fgetc(stdin); //read newline char
 			cond = 1;
 			break;
 		case 'g':
 			printf("Converting to grayscale...\n");
+			if (im == NULL) {
+			  printf("Error: there is no current image\n");
+			}
+			else {
 			grayscale(im);
+			}
 			fgetc(stdin); //read newline char
 			cond = 1;
 			break;
@@ -82,7 +110,13 @@ while(cond) {
 
 			scanf(" %f", &amt);
 			printf("Adjusting brightness by %f...\n", amt);
+			if (im == NULL) {
+			  printf("Error: there is no current image\n");
+			}
+			else {
 			adjustBrightness(im, amt);
+			}
+			getc(stdin);
 			cond = 1;
 			break;
 		case 'q':

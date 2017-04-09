@@ -27,11 +27,12 @@ Image* crop(Image *orig, int x1, int y1, int x2, int y2) {
 	Pixel *pix = malloc(sizeof(Pixel) * newRows * newCols);
 
 	int i = 0;
+	int cols = orig->cols;
 	for (int r = y1; r < y2; r++) {
 		for (int c = x1; c < x2; c++) {
-			pix[i].red = (orig->data[(r*newCols)+c]).red;
-			pix[i].green = (orig->data[(r*newCols)+c]).green;
-			pix[i].blue = (orig->data[(r*newCols)+c]).blue;
+			pix[i].red = (orig->data[(r*cols)+c]).red;
+			pix[i].green = (orig->data[(r*cols)+c]).green;
+			pix[i].blue = (orig->data[(r*cols)+c]).blue;
 			i++;
 		}
 	}
@@ -50,9 +51,9 @@ void invert(Image *im) {
   int cols = im->cols;
   for (int r = 0; r < im->rows; r++) {
 		for (int c = 0; c < im->cols; c++) {
-			((im->data[(r*cols)+c]).red) = 255 - ((im->data[(r*cols)+c]).red);
-			((im->data[(r*cols)+c]).green) = 255 - ((im->data[(r*cols)+c]).green);
-			((im->data[(r*cols)+c]).blue) = 255 - ((im->data[(r*cols)+c]).blue);
+		  ((im->data[(r*cols)+c]).red) = (unsigned char) (255 - ((im->data[(r*cols)+c]).red));
+		  ((im->data[(r*cols)+c]).green) = (unsigned char) 255 - ((im->data[(r*cols)+c]).green);
+		  ((im->data[(r*cols)+c]).blue) = (unsigned char) 255 - ((im->data[(r*cols)+c]).blue);
 		}
 	}
 }

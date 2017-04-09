@@ -54,11 +54,17 @@ else {
 	if (ch != 'P') {
 	  printf("Error, not P");
 	}
+	//printf("%c", ch);
 	ch = getc(fp); //6
 	if (ch != '6') {
 	  printf("Error: not 6");
 	}
-	ch = getc(fp);
+	//printf("%c", ch);
+
+
+	//ch = getc(fp);
+	fscanf(fp, "%*[ \n\t]%c", &ch);
+
 	
 	while (ch == '#') {
 	  while (getc(fp) != '\n');
@@ -69,6 +75,7 @@ else {
 	//checkComments(fp);
 	ungetc(ch, fp);
 	fscanf(fp, " %d", &cols);
+	//printf("%d\n", cols);
 	ch = getc(fp);
 	
 	while (ch == '#') {
@@ -78,6 +85,7 @@ else {
 	
 	//checkComments(fp);
 	ungetc(ch, fp);
+	
 	fscanf(fp, " %d", &rows);
 	ch = getc(fp);
 	
@@ -90,9 +98,9 @@ else {
 	ungetc(ch, fp);
 	fscanf(fp, " %d", &colors);
 	if (colors != 255) {
-	  printf("Error: not proper image");
+	  printf("Error: not proper image (not 255)\n");
 	}
-
+	getc(fp);
 
 
 
@@ -106,9 +114,9 @@ im->data = picture;
 im->rows = rows;
 im->cols = cols;
 im->colors = colors;
-
- return im;
  fclose(fp);
+ return im;
+ //fclose(fp);
  }
  return NULL;
 }
@@ -121,6 +129,7 @@ void writeImage(Image *im, char filename[]) {
 	fprintf(fp, "%d\n", im->rows);
 	fprintf(fp, "%d\n", im->colors);
 	fwrite(im->data, sizeof(Pixel), ((im->rows)*(im->cols)), fp);
+	free(im);
 	fclose(fp); 
 }
 
