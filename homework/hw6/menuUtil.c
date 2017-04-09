@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "menuUtil.h"
-
-
+#include "ppmIO.h"
+#include "imageManip.h"
+#include "structs.h"
 
 
 
@@ -17,7 +19,7 @@ void printMenu() {
 	printf("\tq - quit\n");
 }
 
-int userInput() {
+void userInput() {
 	char firstChar;
 	int cond = 1;
 	char filename[200];
@@ -27,44 +29,65 @@ int userInput() {
 	int y2;
 	float amt;
 
+	Image *im;// = malloc(sizeof(Image));
 while(cond) {
 
 	printMenu();
-	firstChar = fgetc(stdin);
+	firstChar = getc(stdin);
+	//Image *im = malloc(sizeof(Image));
 
 	switch(firstChar) {
 		case 'r':
 
 			scanf(" %s", filename);
 			printf("Reading from %s...\n", filename);
+			//Image *im = malloc(sizeof(Image));
+			//im = readImage(filename);
+			im = readImage(filename);
 			cond = 1;
 			break;
 		case 'w':
 
 			scanf(" %s", filename);
 			printf("Writing to %s...\n", filename);
+			writeImage(im, filename);
 			cond = 1;
 			break;
 		case 'c':
 			scanf(" %d %d %d %d", &x1, &y1, &x2, &y2);
 			printf("Cropping region from (%d, %d) to (%d, %d)...\n", x1, y1, x2, y2);
+			//Image* newImage = malloc(sizeof(Image));
+			im = crop(im, x1, y1, x2, y2);
+			cond = 1;
 			break;
 		case 'i':
 			printf("Inverting intensity...\n");
+			invert(im);
+			fgetc(stdin); //read newline char
+			cond = 1;
 			break;
 		case 's':
 			printf("Swapping color channels...\n");
+			swap(im);
+			fgetc(stdin); //read newline char
+			cond = 1;
 			break;
 		case 'g':
 			printf("Converting to grayscale...\n");
+			grayscale(im);
+			fgetc(stdin); //read newline char
+			cond = 1;
 			break;
 		case 'b':
 
 			scanf(" %f", &amt);
 			printf("Adjusting brightness by %f...\n", amt);
+			adjustBrightness(im, amt);
+			cond = 1;
 			break;
 		case 'q':
-			printf("Goodbye!\n");
+		  
+		  printf("Goodbye!\n");
 			cond = 0;
 			break;
 		default:
@@ -73,7 +96,7 @@ while(cond) {
 			break;
 	}
 
-}
-	
+ }
+ return;	
 }
 
