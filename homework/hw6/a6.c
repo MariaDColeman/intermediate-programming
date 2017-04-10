@@ -2,7 +2,7 @@
 
 int main() {
 
-  userInput();
+    userInput();
 
-  return 0;
+    return 0;
 }
