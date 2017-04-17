@@ -51,17 +51,24 @@ string c;
 string d;
 string trigram;
 string word1;
- string word;
+string word;
 char orderChar = inputChar;
 ifstream inputA (inputName);
 if (inputA.is_open()) {
 while (inputA >> filename) {
-
+  //cout << filename << endl;
 	ifstream inputA2 (filename);
 	if (inputA2.is_open()) {
 			while (inputA2 >> word) {
-				textVector.push_back(word);
+			  //textVector.push_back(word);
+				textVectorTemp.push_back(word);
 			}
+
+			for(vector<string>::const_iterator iter = textVectorTemp.begin(); iter != (textVectorTemp.end()-2); ++iter) {
+			  putInMap(iter, iter+2);
+			}
+			
+			abcd();
 			inputA2.close();
 	}
 
@@ -71,55 +78,14 @@ while (inputA >> filename) {
 }
 inputA.close();
 
-for(vector<string>::const_iterator iter = textVector.begin(); iter != textVector.end(); ++iter){
+/*
+ 
+ for(vector<string>::const_iterator iter = textVector.begin(); iter != textVector.end(); ++iter){
 	putInMap(iter, iter+2);
 }
 
+*/
 
-a = *(textVector.begin());
-if (textVector.size() == 1) { //there is only one word in file
-	
-	checkAndInsert("<START_1>", "<START_2>", a);
-      
-	checkAndInsert("<START_2>", a, "<END_1>");
-
-	checkAndInsert(a, "<END_1>", "<END_2>");
-}
-
-
-else {
-
-b = *((textVector.begin())+1);
-if (textVector.size() == 2) { //there is only two words in file
-	
-		checkAndInsert("<START_1>", "<START_2>", a);
-		checkAndInsert("<START_2>", a, b);
-		checkAndInsert(a, b, "<END_1>");
-		checkAndInsert(b, "<END_1>", "<END_2>");
-
-}
-else {
-c = *((textVector.end())-2);
-if (textVector.size() == 3) { //there is only three words in file
-       
-		checkAndInsert("<START_1>", "<START_2>", a);
-		checkAndInsert("<START_2>", a, b);
-		checkAndInsert(b, c, "<END_1>");
-		checkAndInsert(c, "<END_1>", "<END_2>");
-
-}
-else {
-d = *((textVector.end())-1);
-
-		checkAndInsert("<START_1>", "<START_2>", a);
-		checkAndInsert("<START_2>", a, b);
-		checkAndInsert(c, d, "<END_1>");
-		checkAndInsert(d, "<END_1>", "<END_2>");
-
-
-} //end of if not 3 words
-} //end of if not 2 words
-} //end of if not 1 word
 
 
 switch (orderChar) {
@@ -146,6 +112,61 @@ else {
 	cout << "Unable to open command line text file" << endl;
 }
 
+}
+
+void fileIO::abcd() {
+
+  string a;
+  string b;
+  string c;
+  string d;
+  
+a = *(textVectorTemp.begin());
+if (textVectorTemp.size() == 1) { //there is only one word in file
+	
+	checkAndInsert("<START_1>", "<START_2>", a);
+      
+	checkAndInsert("<START_2>", a, "<END_1>");
+
+	checkAndInsert(a, "<END_1>", "<END_2>");
+}
+
+
+else {
+
+b = *((textVectorTemp.begin())+1);
+if (textVectorTemp.size() == 2) { //there is only two words in file
+	
+		checkAndInsert("<START_1>", "<START_2>", a);
+		checkAndInsert("<START_2>", a, b);
+		checkAndInsert(a, b, "<END_1>");
+		checkAndInsert(b, "<END_1>", "<END_2>");
+
+}
+else {
+c = *((textVectorTemp.end())-2);
+if (textVectorTemp.size() == 3) { //there is only three words in file
+       
+		checkAndInsert("<START_1>", "<START_2>", a);
+		checkAndInsert("<START_2>", a, b);
+		checkAndInsert(b, c, "<END_1>");
+		checkAndInsert(c, "<END_1>", "<END_2>");
+
+}
+else {
+d = *((textVectorTemp.end())-1);
+
+		checkAndInsert("<START_1>", "<START_2>", a);
+		checkAndInsert("<START_2>", a, b);
+		checkAndInsert(c, d, "<END_1>");
+		checkAndInsert(d, "<END_1>", "<END_2>");
+
+
+} //end of if not 3 words
+} //end of if not 2 words
+} //end of if not 1 word
+textVectorTemp.clear();
+textVectorTemp.shrink_to_fit();
 }
 
 

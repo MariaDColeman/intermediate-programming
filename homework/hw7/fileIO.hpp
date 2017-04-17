@@ -28,7 +28,9 @@ public:
   
 	void parta(string, char);
 
-	void checkAndInsert(string, string, string);
+  void abcd();
+  
+  void checkAndInsert(string, string, string);
 
 	void putInMap(vector<string>::const_iterator, vector<string>::const_iterator);
 
@@ -42,7 +44,8 @@ public:
 
 private:
 	vector<string> textVector;
-	map<pair<string, string>, map<string, int>> totalMap;
+  vector<string> textVectorTemp;
+  map<pair<string, string>, map<string, int>> totalMap;
   map<int, vector<string>> trigramsByFreq;
 };
 
