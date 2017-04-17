@@ -1,3 +1,17 @@
+/*File: menuUtil.c
+
+Maria coleman
+
+mcolem31
+
+mcolem31@jhu.edu
+
+EN.600.120 S17
+
+Homework 6
+
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "menuUtil.h"
