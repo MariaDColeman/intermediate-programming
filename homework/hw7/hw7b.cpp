@@ -11,6 +11,7 @@ Homework 7
 
 using std::cout;
 using std::endl;
+using std::atoi;
 
 int main(int argc, char *argv[]) {
 	if (argc != 3) {
@@ -19,8 +20,8 @@ int main(int argc, char *argv[]) {
 	}
 	else {
 	string filename(argv[1]);
-	char num = *(argv[2]);
-
+	int num = atoi(argv[2]);
+	
 	fileIO partB;
 	partB.partb(filename, num);
 

@@ -199,8 +199,6 @@ void fileIO::putInMap(vector<string>::const_iterator start, vector<string>::cons
 
 	}
 
-	
-
 }
 
 
@@ -267,12 +265,14 @@ void fileIO::optionc() {
 //let model be the string holding the name of the language model text file entered as a command line argument
 void fileIO::partb(string fileb, int num) {
 
-srand(4747);
+srand(5);
 string word1;
 string word2;
 string word3;
 string model = fileb;
 int numTimes = num;
+
+// cout << numTimes;
 int count;
 ifstream input (model);
 
@@ -282,12 +282,16 @@ ifstream input (model);
 
 if (input.is_open()) {
 
-	while(!(input.eof())) {
+  /*
+while(!(input.eof())) {
 		input >> word1;
 		input >> word2;
 		input >> word3;
 		input >> count;
-
+  */
+	while((input >> word1) && (input >> word2) && (input >> word3) && (input >> count)) {
+	  // cout << word1 << endl;
+	  // cout << count << endl;
 		totalMap[make_pair(word1, word2)][word3] = count;
 
 		//firstAndSec = make_pair (word1, word2);
@@ -307,21 +311,33 @@ if (input.is_open()) {
 		string temp;
 		int denom = 0;
 		cout << str1 << " " << str2;
+		//cout << endl;
 		while (!((str1 == "<END_1>") && (str2 == "<END_2>"))) {
-		
+		  // cout << "entering while" << endl;
 		denom = 0;
-		for(map<string, int>::const_iterator it = (totalMap[make_pair(str1, str2)]).begin(); it != (totalMap[make_pair(str1, str2)]).end(); ++it) {
+
+		map<pair<string, string>, map<string, int>>::const_iterator ito;
+		ito = totalMap.find(make_pair(str1, str2));
+		
+		for(map<string, int>::const_iterator it = (ito->second).begin(); it != (ito->second).end(); ++it) {
 		  denom += (it->second);
+		  //cout << denom << endl;
 		  //cout << denom << endl;
 		}
 		//int mapSize = totalMap[make_pair(str1, str2)].size();
 		int cond = rand() % denom;
 		//cout << cond << endl;
+		//cout << " " << cond << endl;
+		
 		int prev = 0;
 		int boole = 1;
 
-		for (map<string, int>::const_iterator it = (totalMap[make_pair(str1, str2)]).begin(); it != (totalMap[make_pair(str1, str2)]).end(); ++it) {
-			if (boole && (cond >= prev) && (cond < ((it->second)+prev))) {
+				    //map<pair<string, string>, map<string, int>>::const_iterator ito;
+		ito = totalMap.find(make_pair(str1, str2));
+		
+		for (map<string, int>::const_iterator it = (ito->second).begin(); it != (ito->second).end(); ++it) {
+		  
+		  if (boole && (cond >= prev) && (cond < ((it->second)+prev))) {
 				temp = str2;
 				str2 = it->first;
 				cout << " " << str2;
@@ -329,10 +345,16 @@ if (input.is_open()) {
 				boole = 0;
 			}
 			prev += (it->second);
+			//cout << prev << endl;
 		}
 
+		//map<pair<string, string>, map<string, int>>::const_iterator ito;
+		
 
-	} // end of while loop
+
+		} // end of while loop
+		//cout << "exit while" << endl;
+		cout << endl;
 	}
 
 
