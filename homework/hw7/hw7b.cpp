@@ -12,9 +12,11 @@ Homework 7
 using std::cout;
 using std::endl;
 using std::atoi;
+using std::srand;
 
 int main(int argc, char *argv[]) {
-	if (argc != 3) {
+  srand(4747);
+  if (argc != 3) {
 		cout << "Error: Improper number of command line arguments" << endl;
 		return 1;
 	}

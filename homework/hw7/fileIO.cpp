@@ -36,7 +36,7 @@ void optionr();
 void optionc();
 void putInMap(vector<string>::const_iterator, vector<string>::const_iterator);
 
-//srand((unsigned) 4747);
+
 
 //PART A
 //let inputName be the name of the text file that was a command line argument containing the names of the actual text files with authors work.
@@ -56,11 +56,11 @@ char orderChar = inputChar;
 ifstream inputA (inputName);
 if (inputA.is_open()) {
 while (inputA >> filename) {
-  //cout << filename << endl;
+  
 	ifstream inputA2 (filename);
 	if (inputA2.is_open()) {
 			while (inputA2 >> word) {
-			  //textVector.push_back(word);
+			 
 				textVectorTemp.push_back(word);
 			}
 
@@ -77,14 +77,6 @@ while (inputA >> filename) {
 	}
 }
 inputA.close();
-
-/*
- 
- for(vector<string>::const_iterator iter = textVector.begin(); iter != textVector.end(); ++iter){
-	putInMap(iter, iter+2);
-}
-
-*/
 
 
 
@@ -103,9 +95,6 @@ switch (orderChar) {
 		break;
 }
 
-
-//delete(textVector);
-//delete(totalMap);
 
 }
 else {
@@ -186,7 +175,6 @@ void fileIO::putInMap(vector<string>::const_iterator start, vector<string>::cons
 	  string first = *start;
 	  start++;
 	  string second = *start;
-	  //firstAndSec = make_pair(*start, *(++start));
 	  firstAndSec = make_pair(first, second);   
 
 		if(totalMap[firstAndSec].count(*(++start))) {
@@ -195,10 +183,7 @@ void fileIO::putInMap(vector<string>::const_iterator start, vector<string>::cons
 		else {
 			totalMap[firstAndSec][*start] = 1;
 		}
-		
-
-	}
-
+	   }
 }
 
 
@@ -225,20 +210,17 @@ void fileIO::optionr() {
 
 
 void fileIO::optionc() {
-	//make a map where the key is the frequency and what it maps to is the trigram as a string
 	for(map<pair<string, string>, map<string, int>>::const_iterator itc = totalMap.begin(); itc != totalMap.end(); ++itc) {
 
 		for(map<string, int>::const_iterator itc2 = (itc->second).begin(); itc2 != (itc->second).end(); ++itc2) {
 		stringstream s;
 		s << (itc->first.first) << " " << (itc->first.second) << " " << (itc2->first);
 		string result = s.str();
-		//trigramsByFreq[itc2->second].insert(s);
-		//trigramsByFreq.emplace((itc2->second),s);
 		trigramsByFreq[itc2->second].push_back(result);
 	}
 	}
 
-	//print out new map above
+	//print out new map made above
 	for(map<int, vector<string>>::const_iterator iterP = trigramsByFreq.begin(); iterP != trigramsByFreq.end(); ++iterP) {
 
 		for (vector<string>::const_iterator stri = iterP->second.begin(); stri != iterP->second.end(); ++stri) {
@@ -246,14 +228,7 @@ void fileIO::optionc() {
 		}
 	}
 
-
-
 }
-
-
-
-
-
 
 
 
@@ -265,42 +240,21 @@ void fileIO::optionc() {
 //let model be the string holding the name of the language model text file entered as a command line argument
 void fileIO::partb(string fileb, int num) {
 
-srand(5);
+  //srand(5);
 string word1;
 string word2;
 string word3;
 string model = fileb;
 int numTimes = num;
 
-// cout << numTimes;
+
 int count;
 ifstream input (model);
 
-// maybe do 
-//pair <string, string> firstAndSec;
-//map <string, int> thirdAndCount;
-
 if (input.is_open()) {
-
-  /*
-while(!(input.eof())) {
-		input >> word1;
-		input >> word2;
-		input >> word3;
-		input >> count;
-  */
+  
 	while((input >> word1) && (input >> word2) && (input >> word3) && (input >> count)) {
-	  // cout << word1 << endl;
-	  // cout << count << endl;
-		totalMap[make_pair(word1, word2)][word3] = count;
-
-		//firstAndSec = make_pair (word1, word2);
-		//thirdAndCount.insert(word3, count);
-		
-	//firstAndSec = make_pair (word1, word2);
-	//for (int i=0, i<count; i++) {
-	//		++(totalMap[firstAndSec].(a));
-	//}
+  		totalMap[make_pair(word1, word2)][word3] = count;
 	}
 
 
@@ -311,9 +265,9 @@ while(!(input.eof())) {
 		string temp;
 		int denom = 0;
 		cout << str1 << " " << str2;
-		//cout << endl;
+		
 		while (!((str1 == "<END_1>") && (str2 == "<END_2>"))) {
-		  // cout << "entering while" << endl;
+	   
 		denom = 0;
 
 		map<pair<string, string>, map<string, int>>::const_iterator ito;
@@ -321,18 +275,11 @@ while(!(input.eof())) {
 		
 		for(map<string, int>::const_iterator it = (ito->second).begin(); it != (ito->second).end(); ++it) {
 		  denom += (it->second);
-		  //cout << denom << endl;
-		  //cout << denom << endl;
 		}
-		//int mapSize = totalMap[make_pair(str1, str2)].size();
-		int cond = rand() % denom;
-		//cout << cond << endl;
-		//cout << " " << cond << endl;
-		
+	       
+		int cond = rand() % denom;		
 		int prev = 0;
 		int boole = 1;
-
-				    //map<pair<string, string>, map<string, int>>::const_iterator ito;
 		ito = totalMap.find(make_pair(str1, str2));
 		
 		for (map<string, int>::const_iterator it = (ito->second).begin(); it != (ito->second).end(); ++it) {
@@ -345,24 +292,13 @@ while(!(input.eof())) {
 				boole = 0;
 			}
 			prev += (it->second);
-			//cout << prev << endl;
 		}
 
-		//map<pair<string, string>, map<string, int>>::const_iterator ito;
-		
-
-
 		} // end of while loop
-		//cout << "exit while" << endl;
+		
 		cout << endl;
 	}
-
-
-
-
-
 	input.close();
-	//close(totalMap);
 }
 
 else {
