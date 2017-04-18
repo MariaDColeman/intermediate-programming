@@ -1,0 +1,20 @@
+<START_1> <START_2> I do not like them here or there I do not like them anywhere <END_1> <END_2>
+<START_1> <START_2> I do not like them here or there I do not like them anywhere <END_1> <END_2>
+<START_1> <START_2> I do not like them anywhere <END_1> <END_2>
+<START_1> <START_2> I do not like them here or there I do not like them here or there I do not like them anywhere <END_1> <END_2>
+<START_1> <START_2> I do not like them anywhere <END_1> <END_2>
+<START_1> <START_2> I do not like them anywhere <END_1> <END_2>
+<START_1> <START_2> they’ve talked about gauze. they’ve talked about laws and they’ve talked about laws and they’ve talked about gauze. they’ve talked about paws and they’ve talked quite a lot about old Santa Clause. <END_1> <END_2>
+<START_1> <START_2> they’ve talked about flaws. they’ve talked about flaws. they’ve talked quite a lot about old Santa Clause. <END_1> <END_2>
+<START_1> <START_2> I do not like them anywhere <END_1> <END_2>
+<START_1> <START_2> they’ve talked about gauze. they’ve talked about paws and they’ve talked about flaws. they’ve talked about flaws. they’ve talked about paws and they’ve talked quite a lot about old Santa Clause. <END_1> <END_2>
+<START_1> <START_2> they’ve talked about paws and they’ve talked about laws and they’ve talked about laws and they’ve talked about flaws. they’ve talked about laws and they’ve talked quite a lot about old Santa Clause. <END_1> <END_2>
+<START_1> <START_2> they’ve talked about gauze. they’ve talked about flaws. they’ve talked about gauze. they’ve talked about gauze. they’ve talked quite a lot about old Santa Clause. <END_1> <END_2>
+<START_1> <START_2> I do not like them anywhere <END_1> <END_2>
+<START_1> <START_2> they’ve talked quite a lot about old Santa Clause. <END_1> <END_2>
+<START_1> <START_2> they’ve talked quite a lot about old Santa Clause. <END_1> <END_2>
+<START_1> <START_2> they’ve talked quite a lot about old Santa Clause. <END_1> <END_2>
+<START_1> <START_2> I do not like them anywhere <END_1> <END_2>
+<START_1> <START_2> they’ve talked quite a lot about old Santa Clause. <END_1> <END_2>
+<START_1> <START_2> I do not like them here or there I do not like them anywhere <END_1> <END_2>
+<START_1> <START_2> they’ve talked about paws and they’ve talked about gauze. they’ve talked about laws and they’ve talked about laws and they’ve talked about flaws. they’ve talked about flaws. they’ve talked about paws and they’ve talked about flaws. they’ve talked quite a lot about old Santa Clause. <END_1> <END_2>
