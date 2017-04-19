@@ -14,6 +14,7 @@ Homework 7
 #include <vector>
 #include <map>
 
+
 using std::string;
 using std::map;
 using std::vector;
@@ -42,6 +43,9 @@ public:
 
 	void partb(string, int);
 
+  friend class testA;
+  friend class testB;
+  
 private:
 	vector<string> textVector;
   vector<string> textVectorTemp;

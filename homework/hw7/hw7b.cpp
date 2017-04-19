@@ -15,18 +15,18 @@ using std::atoi;
 using std::srand;
 
 int main(int argc, char *argv[]) {
-  srand(4747);
-  if (argc != 3) {
-		cout << "Error: Improper number of command line arguments" << endl;
-		return 1;
-	}
-	else {
-	string filename(argv[1]);
-	int num = atoi(argv[2]);
-	
-	fileIO partB;
-	partB.partb(filename, num);
+    srand(4747);
+    if (argc != 3) {
+        cout << "Error: Improper number of command line arguments" << endl;
+        return 1;
+    }
+    else {
+        string filename(argv[1]);
+        int num = atoi(argv[2]);
 
-	return 0;
-	}
+        fileIO partB;
+        partB.partb(filename, num);
+
+        return 0;
+    }
 }
